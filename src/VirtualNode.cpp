@@ -60,7 +60,7 @@ Node* VirtualNode::get_op_node (int idx) {
     }
 }
 VirtualNode::~VirtualNode () {
-    cout << "free virtualNode: " << get_name () << endl;
+    // cout << "free virtualNode: " << get_name () << endl;
     if (m_data != 0) {
         delete m_data;
     }

@@ -3,7 +3,7 @@
 using namespace std;
 OperatorNode::OperatorNode (string type, string id, string idx): Node (type, id) {
     m_name.push_back (idx);
-    m_a = 0.01;
+    m_a = 0.1;
     m_sum_grad = 0;
     m_output = 0;
 }
@@ -39,7 +39,7 @@ void OperatorNode::update () {
     }
 }
 OperatorNode::~OperatorNode () {
-    cout << "free operatorNode:" << get_name () << endl;
+    // cout << "free operatorNode:" << get_name () << endl;
     delete m_sum_grad;
     if (m_name[0] != "Parameter") {
         delete m_output;

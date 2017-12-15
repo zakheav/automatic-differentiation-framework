@@ -1,6 +1,11 @@
 all: virtualGraph_test
+
+xor_test: obj/xor_test.o obj/Graph.o obj/VirtualGraph.o obj/ComputeGraph.o obj/Node.o obj/VirtualNode.o obj/OperatorNode.o obj/Input.o obj/Add.o obj/Mult.o obj/Minus.o obj/SquareSum.o obj/Sigmoid.o obj/Parameter.o obj/Tensor.o
+	g++ -std=c++11 obj/xor_test.o obj/Graph.o obj/VirtualGraph.o obj/ComputeGraph.o obj/Node.o obj/VirtualNode.o obj/OperatorNode.o obj/Input.o obj/Add.o obj/Mult.o obj/Minus.o obj/SquareSum.o obj/Sigmoid.o obj/Parameter.o obj/Tensor.o -o xor_test
+
 graph_test: obj/graph_test.o obj/Graph.o obj/Node.o
 	g++ -std=c++11 obj/graph_test.o obj/Graph.o obj/Node.o -o graph_test
+
 tensor_test: obj/tensor_test.o obj/Tensor.o
 	g++ -std=c++11 obj/tensor_test.o obj/Tensor.o -o tensor_test
 
@@ -10,6 +15,8 @@ virtualGraph_test: obj/virtualGraph_test.o obj/Graph.o obj/VirtualGraph.o obj/Co
 operatorNode_test: obj/operatorNode_test.o obj/ComputeGraph.o obj/Graph.o obj/Sigmoid.o obj/SquareSum.o obj/Add.o obj/Mult.o obj/Minus.o obj/Parameter.o obj/OperatorNode.o obj/Node.o obj/Tensor.o
 	g++ -std=c++11 obj/operatorNode_test.o obj/ComputeGraph.o obj/Graph.o obj/Sigmoid.o obj/SquareSum.o obj/Add.o obj/Mult.o obj/Minus.o obj/Parameter.o obj/OperatorNode.o obj/Node.o obj/Tensor.o -o operatorNode_test
 
+obj/xor_test.o: unit_test/xor_test.cpp
+	g++ -std=c++11 -c unit_test/xor_test.cpp -o obj/xor_test.o
 obj/operatorNode_test.o: unit_test/operatorNode_test.cpp
 	g++ -std=c++11 -c unit_test/operatorNode_test.cpp -o obj/operatorNode_test.o
 obj/virtualGraph_test.o: unit_test/virtualGraph_test.cpp

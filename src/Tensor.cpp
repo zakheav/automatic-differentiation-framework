@@ -113,7 +113,7 @@ Tensor* Tensor::add (Tensor* tensor) {
 
 void Tensor::init () {
     for (int i = 0; i < m_size; ++i) {
-        m_tensor[i] = (rand () % 100) / 1000.0;
+        m_tensor[i] = (rand () % 1000) / 1000.0;
     }
 }
 
