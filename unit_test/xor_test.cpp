@@ -63,19 +63,31 @@ int main () {
     vg.add_node (minus -> get_name (), ss);
 
     // 生成计算图
-    ComputeGraph* cg = new ComputeGraph ();
-    vg.build_compute_graph (cg);
+    ComputeGraph* train_cg = new ComputeGraph ();
+    vg.build_compute_graph (train_cg);
     // 构建转置图，用于反向传播
-    cg -> build_reverse_graph ();
+    train_cg -> build_reverse_graph ();
     // 训练
     for (int i = 0; i < 10000; ++i) {
-        vector<Tensor*> result;
-        cg -> forward_propagation (result);
-        cg -> back_propagation ();
+        vector<Tensor*> error;
+        train_cg -> forward_propagation (error);
+        train_cg -> back_propagation ();
         if (i % 1000 == 0) {
-            result[0] -> display ();
-            ((OperatorNode*) (cg -> get_node ("Sigmoid:2:0:"))) -> m_output -> display ();
+            error[0] -> display ();
         }
-        cg -> release_tensor ();
+        train_cg -> release_tensor ();// 释放本次迭代的中间结果张量
     }
+    // 构建子图
+    vector<Node*> endnode_list;
+    endnode_list.push_back (sig2);
+    vg.build_subgraph (endnode_list);
+    ComputeGraph* test_cg = new ComputeGraph ();
+    vg.build_compute_graph (test_cg);
+    test_cg -> build_reverse_graph ();
+
+    vector<Tensor*> result;
+    test_cg -> forward_propagation (result);
+    // 输出结果
+    cout << "final result:" << endl;
+    result[0] -> display ();
 }
