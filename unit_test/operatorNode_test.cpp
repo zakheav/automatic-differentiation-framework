@@ -1,4 +1,5 @@
 #include "../include/op_node/Add.h"
+#include "../include/op_node/Bias.h"
 #include "../include/op_node/SquareSum.h"
 #include "../include/op_node/Minus.h"
 #include "../include/op_node/Mult.h"
@@ -11,9 +12,9 @@
 using namespace std;
 int main () {
     vector<int> shape1; shape1.push_back (2); shape1.push_back (2);
-    vector<int> shape2; shape2.push_back (2); shape2.push_back (2);
+    vector<int> shape2; shape2.push_back (1); shape2.push_back (2);
     float data1[] = {1,2,3,4};
-    float data2[] = {2,3,4,5};
+    float data2[] = {2,3};
     Tensor* t1 = new Tensor (shape1, data1);
     Tensor* t2 = new Tensor (shape2, data2);
     t1 -> display ();
@@ -27,19 +28,22 @@ int main () {
     OperatorNode* mult = new Mult ("Mult", "1", "0");
     OperatorNode* sigmoid = new Sigmoid ("Sigmoid", "1", "0");
     OperatorNode* square_sum = new SquareSum ("SquareSum", "1", "0");
+    OperatorNode* b = new Bias ("Bias", "1", "0");
 
     // 构建计算图
     ComputeGraph cg;
     cg.add_node ("", p1);
     cg.add_node ("", p2);
-    cg.add_node (p1 -> get_name (), add);
-    cg.add_node (p2 -> get_name (), add);// 测试加法
+    //cg.add_node (p1 -> get_name (), add);
+    //cg.add_node (p2 -> get_name (), add);// 测试加法
     //cg.add_node (p1 -> get_name (), minus);
     //cg.add_node (p2 -> get_name (), minus);// 测试减法
     //cg.add_node (p1 -> get_name (), mult);
     //cg.add_node (p2 -> get_name (), mult);// 测试乘法
     //cg.add_node (p1 -> get_name (), sigmoid);// 测试sigmoid
     //cg.add_node (p1 -> get_name (), square_sum);// 测试squareSum
+    cg.add_node (p1 -> get_name (), b);
+    cg.add_node (p2 -> get_name (), b);// 测试偏置
     // 构建转置图
     cg.build_reverse_graph ();
     

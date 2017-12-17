@@ -12,8 +12,8 @@ tensor_test: obj/tensor_test.o obj/Tensor.o
 virtualGraph_test: obj/virtualGraph_test.o obj/Graph.o obj/VirtualGraph.o obj/ComputeGraph.o obj/Node.o obj/VirtualNode.o obj/BranchNode.o obj/MyBranch.o obj/LoopNode.o obj/MyLoop.o obj/OperatorNode.o obj/Add.o obj/Input.o obj/Mult.o obj/Minus.o obj/SquareSum.o obj/Sigmoid.o obj/Parameter.o obj/Tensor.o
 	g++ -std=c++11 obj/virtualGraph_test.o obj/Graph.o obj/VirtualGraph.o obj/ComputeGraph.o obj/Node.o obj/VirtualNode.o obj/BranchNode.o obj/MyBranch.o obj/LoopNode.o obj/MyLoop.o obj/OperatorNode.o obj/Add.o obj/Input.o obj/Mult.o obj/Minus.o obj/SquareSum.o obj/Sigmoid.o obj/Parameter.o obj/Tensor.o -o virtualGraph_test
 
-operatorNode_test: obj/operatorNode_test.o obj/ComputeGraph.o obj/Graph.o obj/Sigmoid.o obj/SquareSum.o obj/Add.o obj/Mult.o obj/Minus.o obj/Parameter.o obj/OperatorNode.o obj/Node.o obj/Tensor.o
-	g++ -std=c++11 obj/operatorNode_test.o obj/ComputeGraph.o obj/Graph.o obj/Sigmoid.o obj/SquareSum.o obj/Add.o obj/Mult.o obj/Minus.o obj/Parameter.o obj/OperatorNode.o obj/Node.o obj/Tensor.o -o operatorNode_test
+operatorNode_test: obj/operatorNode_test.o obj/ComputeGraph.o obj/Graph.o obj/Sigmoid.o obj/SquareSum.o obj/Add.o obj/Bias.o obj/Mult.o obj/Minus.o obj/Parameter.o obj/OperatorNode.o obj/Node.o obj/Tensor.o
+	g++ -std=c++11 obj/operatorNode_test.o obj/ComputeGraph.o obj/Graph.o obj/Sigmoid.o obj/SquareSum.o obj/Add.o obj/Bias.o obj/Mult.o obj/Minus.o obj/Parameter.o obj/OperatorNode.o obj/Node.o obj/Tensor.o -o operatorNode_test
 
 obj/xor_test.o: unit_test/xor_test.cpp
 	g++ -std=c++11 -c unit_test/xor_test.cpp -o obj/xor_test.o
@@ -41,6 +41,8 @@ obj/Minus.o: src/op_node/Minus.cpp
 	g++ -std=c++11 -c src/op_node/Minus.cpp -o obj/Minus.o
 obj/Add.o: src/op_node/Add.cpp
 	g++ -std=c++11 -c src/op_node/Add.cpp -o obj/Add.o
+obj/Bias.o: src/op_node/Bias.cpp
+	g++ -std=c++11 -c src/op_node/Bias.cpp -o obj/Bias.o
 obj/Input.o: src/op_node/Input.cpp
 	g++ -std=c++11 -c src/op_node/Input.cpp -o obj/Input.o
 obj/Parameter.o: src/op_node/Parameter.cpp
@@ -48,7 +50,7 @@ obj/Parameter.o: src/op_node/Parameter.cpp
 
 obj/ComputeGraph.o: src/ComputeGraph.cpp
 	g++ -std=c++11 -c src/ComputeGraph.cpp -o obj/ComputeGraph.o
-obj/VirtualGraph.o: src/VirtualGraph.cpp 
+obj/VirtualGraph.o: src/VirtualGraph.cpp
 	g++ -std=c++11 -c src/VirtualGraph.cpp -o obj/VirtualGraph.o
 obj/Graph.o: src/Graph.cpp
 	g++ -std=c++11 -c src/Graph.cpp -o obj/Graph.o

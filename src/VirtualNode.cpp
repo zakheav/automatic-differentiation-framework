@@ -55,6 +55,8 @@ Node* VirtualNode::get_op_node (int idx) {
         return new Minus (m_name[0], m_name[1], oss.str ());
     } else if (m_name[0] == "Sigmoid") {
         return new Sigmoid (m_name[0], m_name[1], oss.str ());
+    } else if (m_name[0] == "Bias") {
+        return new Bias (m_name[0], m_name[1], oss.str ());
     } else {
         return 0;
     }
