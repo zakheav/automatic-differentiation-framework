@@ -4,6 +4,7 @@
 #include "../include/op_node/Add.h"
 #include "../include/op_node/Input.h"
 #include "../include/op_node/Mult.h"
+#include "../include/op_node/Bias.h"
 #include "../include/op_node/Minus.h"
 #include "../include/op_node/SquareSum.h"
 #include "../include/op_node/Sigmoid.h"

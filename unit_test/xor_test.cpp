@@ -2,6 +2,7 @@
 #include "../include/op_node/SquareSum.h"
 #include "../include/op_node/Minus.h"
 #include "../include/op_node/Mult.h"
+#include "../include/op_node/Bias.h"
 #include "../include/op_node/Parameter.h"
 #include "../include/VirtualGraph.h"
 #include "../include/ComputeGraph.h"
@@ -26,6 +27,14 @@ int main () {
     Tensor* w2 = new Tensor (shape_w2);
     w2 -> init ();
 
+    vector<int> shape_b1; shape_b1.push_back (1); shape_b1.push_back (4);
+    Tensor* b1 = new Tensor (shape_b1);
+    b1 -> init ();
+
+    vector<int> shape_b2; shape_b2.push_back (1); shape_b2.push_back (1);
+    Tensor* b2 = new Tensor (shape_b2);
+    b2 -> init ();
+
     // 准备虚拟节点
     VirtualNode* input_x = new VirtualNode ("Input", "1");
     input_x -> m_input_data.push_back (x);
@@ -39,12 +48,20 @@ int main () {
     VirtualNode* w_2 = new VirtualNode ("Parameter", "2");
     w_2 -> m_data = w2;
 
+    VirtualNode* b_1 = new VirtualNode ("Parameter", "3");
+    b_1 -> m_data = b1;
+
+    VirtualNode* b_2 = new VirtualNode ("Parameter", "4");
+    b_2 -> m_data = b2;
+
     VirtualNode* mult1 = new VirtualNode ("Mult", "1");
     VirtualNode* mult2 = new VirtualNode ("Mult", "2");
     VirtualNode* sig1 = new VirtualNode ("Sigmoid", "1");
     VirtualNode* sig2 = new VirtualNode ("Sigmoid", "2");
     VirtualNode* minus = new VirtualNode ("Minus", "1");
     VirtualNode* ss = new VirtualNode ("SquareSum", "1");
+    VirtualNode* bias1 = new VirtualNode ("Bias", "1");
+    VirtualNode* bias2 = new VirtualNode ("Bias", "2");
 
     // 构建虚拟图
     VirtualGraph vg;
@@ -52,11 +69,17 @@ int main () {
     vg.add_node ("", w_1);
     vg.add_node (input_x -> get_name (), mult1);
     vg.add_node (w_1 -> get_name (), mult1);
-    vg.add_node (mult1 -> get_name (), sig1);
+    vg.add_node ("", b_1);
+    vg.add_node (mult1 -> get_name (), bias1);
+    vg.add_node (b_1 -> get_name (), bias1);
+    vg.add_node (bias1 -> get_name (), sig1);
     vg.add_node ("", w_2);
     vg.add_node (sig1 -> get_name (), mult2);
     vg.add_node (w_2 -> get_name (), mult2);
-    vg.add_node (mult2 -> get_name (), sig2);
+    vg.add_node ("", b_2);
+    vg.add_node (mult2 -> get_name (), bias2);
+    vg.add_node (b_2 -> get_name (), bias2);
+    vg.add_node (bias2 -> get_name (), sig2);
     vg.add_node ("", input_y);
     vg.add_node (sig2 -> get_name (), minus);
     vg.add_node (input_y -> get_name (), minus);
@@ -68,7 +91,7 @@ int main () {
     // 构建转置图，用于反向传播
     train_cg -> build_reverse_graph ();
     // 训练
-    for (int i = 0; i < 10000; ++i) {
+    for (int i = 0; i < 5000; ++i) {
         vector<Tensor*> error;
         train_cg -> forward_propagation (error);
         train_cg -> back_propagation ();
