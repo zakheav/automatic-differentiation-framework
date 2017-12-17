@@ -4,7 +4,7 @@ SquareSum::SquareSum (string type, string id, string idx): OperatorNode (type, i
 }
 void SquareSum::op () {
     Tensor* parent_output = ((OperatorNode*) m_parents[0]) -> m_output;
-    vector<int> shape; shape.push_back (1); shape.push_back (1);
+    vector<int> shape (2); shape[0] = 1; shape[1] = 1;
     m_output = new Tensor (shape);
     for (int i = 0; i < parent_output -> m_size; ++i) {
         m_output -> m_tensor[0] += parent_output -> m_tensor[i] * parent_output -> m_tensor[i];
@@ -12,7 +12,7 @@ void SquareSum::op () {
 }
 void SquareSum::grad_op () {
     Tensor* parent_output = ((OperatorNode*) m_parents[0]) -> m_output;
-    vector<int> shape; shape.push_back (1); shape.push_back (parent_output -> m_size);
+    vector<int> shape (2); shape[0] = 1; shape[1] = parent_output -> m_size;
 
     Tensor grad = Tensor (shape);
     vector<int> idxs (2);

@@ -3,12 +3,10 @@
 #include "../include/Tensor.h"
 using namespace std;
 Tensor::Tensor (vector<int> shape) {
-    vector<int>::iterator shape_it = shape.begin ();
     m_size = 1;
-    while (shape_it != shape.end ()) {
-        m_shape.push_back (*shape_it);
-        m_size *= (*shape_it);
-        ++shape_it;
+    for (int i = 0; i < shape.size (); ++i) {
+        m_shape.push_back (shape[i]);
+        m_size *= shape[i];
     }
     m_tensor = (float*) malloc (m_size * sizeof (float));
     for (int i = 0; i < m_size; ++i) {
@@ -17,12 +15,10 @@ Tensor::Tensor (vector<int> shape) {
 }
 
 Tensor::Tensor (vector<int> shape, float data[]) {
-    vector<int>::iterator shape_it = shape.begin ();
     m_size = 1;
-    while (shape_it != shape.end ()) {
-        m_shape.push_back (*shape_it);
-        m_size *= (*shape_it);
-        ++shape_it;
+    for (int i = 0; i < shape.size (); ++i) {
+        m_shape.push_back (shape[i]);
+        m_size *= shape[i];
     }
     m_tensor = (float*) malloc (m_size * sizeof (float));
     for (int i = 0; i < m_size; ++i) {
@@ -56,9 +52,9 @@ Tensor* Tensor::matrix_mult (Tensor* tensor) {
     vector<int> idxs2 (2);
     Tensor* result = 0;
     if (m_shape[1] == tensor -> m_shape[0]) {
-        vector<int> result_shape;
-        result_shape.push_back (m_shape[0]);
-        result_shape.push_back (tensor -> m_shape[1]);
+        vector<int> result_shape (2);
+        result_shape[0] = m_shape[0];
+        result_shape[1] = tensor -> m_shape[1];
         result = new Tensor (result_shape);
         for (int i = 0; i < m_shape[0]; ++i) {
             for (int j = 0; j < tensor -> m_shape[1]; ++j) {

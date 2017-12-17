@@ -9,8 +9,8 @@ graph_test: obj/graph_test.o obj/Graph.o obj/Node.o
 tensor_test: obj/tensor_test.o obj/Tensor.o
 	g++ -std=c++11 obj/tensor_test.o obj/Tensor.o -o tensor_test
 
-virtualGraph_test: obj/virtualGraph_test.o obj/Graph.o obj/VirtualGraph.o obj/ComputeGraph.o obj/Node.o obj/VirtualNode.o obj/BranchNode.o obj/MyBranch.o obj/LoopNode.o obj/MyLoop.o obj/OperatorNode.o obj/Add.o obj/Input.o obj/Mult.o obj/Minus.o obj/SquareSum.o obj/Sigmoid.o obj/Parameter.o obj/Tensor.o
-	g++ -std=c++11 obj/virtualGraph_test.o obj/Graph.o obj/VirtualGraph.o obj/ComputeGraph.o obj/Node.o obj/VirtualNode.o obj/BranchNode.o obj/MyBranch.o obj/LoopNode.o obj/MyLoop.o obj/OperatorNode.o obj/Add.o obj/Input.o obj/Mult.o obj/Minus.o obj/SquareSum.o obj/Sigmoid.o obj/Parameter.o obj/Tensor.o -o virtualGraph_test
+virtualGraph_test: obj/virtualGraph_test.o obj/Graph.o obj/VirtualGraph.o obj/ComputeGraph.o obj/Node.o obj/VirtualNode.o obj/BranchNode.o obj/MyBranch.o obj/LoopNode.o obj/MyLoop.o obj/OperatorNode.o obj/Add.o obj/Bias.o obj/Input.o obj/Mult.o obj/Minus.o obj/SquareSum.o obj/Sigmoid.o obj/Parameter.o obj/Tensor.o
+	g++ -std=c++11 obj/virtualGraph_test.o obj/Graph.o obj/VirtualGraph.o obj/ComputeGraph.o obj/Node.o obj/VirtualNode.o obj/BranchNode.o obj/MyBranch.o obj/LoopNode.o obj/MyLoop.o obj/OperatorNode.o obj/Add.o obj/Bias.o obj/Input.o obj/Mult.o obj/Minus.o obj/SquareSum.o obj/Sigmoid.o obj/Parameter.o obj/Tensor.o -o virtualGraph_test
 
 operatorNode_test: obj/operatorNode_test.o obj/ComputeGraph.o obj/Graph.o obj/Sigmoid.o obj/SquareSum.o obj/Add.o obj/Bias.o obj/Mult.o obj/Minus.o obj/Parameter.o obj/OperatorNode.o obj/Node.o obj/Tensor.o
 	g++ -std=c++11 obj/operatorNode_test.o obj/ComputeGraph.o obj/Graph.o obj/Sigmoid.o obj/SquareSum.o obj/Add.o obj/Bias.o obj/Mult.o obj/Minus.o obj/Parameter.o obj/OperatorNode.o obj/Node.o obj/Tensor.o -o operatorNode_test
