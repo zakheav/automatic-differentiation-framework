@@ -3,7 +3,7 @@
 using namespace std;
 OperatorNode::OperatorNode (string type, string id, string idx): Node (type, id) {
     m_name.push_back (idx);
-    m_a = 0.1;
+    m_a = 0.2;
     m_sum_grad = 0;
     m_output = 0;
 }

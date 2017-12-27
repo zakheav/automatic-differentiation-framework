@@ -8,25 +8,30 @@ int main () {
     float data[] = {1,2,3,4};
     float data2[] = {2,3,4,5};
     Tensor* tensor1 = new Tensor (shape, data);
-    tensor1 -> display ();
+    tensor1 -> display (); cout << endl;
     
     Tensor* tensor2 = new Tensor (shape, data2);
-    tensor2 -> display ();
+    tensor2 -> display (); cout << endl;
 
     Tensor* random_tensor = new Tensor (shape);
     random_tensor -> init ();
+    cout << "init test" << endl;
     random_tensor -> display ();// 初始化验证
 
     Tensor* mult_result = tensor1 -> matrix_mult (tensor2);// 验证乘法
+    cout << "matrix mult test" << endl;
     mult_result -> display ();
       
     Tensor* add_result = tensor1 -> add (tensor2);// 加法验证
+    cout << "add test 1" << endl;
     add_result -> display ();
     
     tensor1 -> add (tensor2, add_result);// 加法验证2
+    cout << "add test 2" << endl;
     add_result -> display ();
 
     Tensor* scalar_mult_result = tensor1 -> scalar_mult (3.0);// 标量乘法
+    cout << "scalar mult test" << endl;
     scalar_mult_result -> display ();
 
     

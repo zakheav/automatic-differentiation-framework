@@ -6,7 +6,7 @@ class Tensor {
         std::vector<int> m_shape;
         int m_size;
         float* m_tensor;
-        Tensor (std::vector<int> shape);
+        Tensor (std::vector<int> shape, int need_init = 1);
         Tensor (std::vector<int> shape, float data[]);
         float get_value (std::vector<int> idxs);// 根据各个维度的下标获取值
         void set_value (std::vector<int> idxs, float value);// 设置某坐标下的值

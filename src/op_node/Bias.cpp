@@ -8,7 +8,7 @@ void Bias::op () {
     Tensor* parent1_output = ((OperatorNode*) m_parents[1]) -> m_output;// 偏置向量
     m_output = 0;
     if (parent1_output -> m_shape[0] == 1 && parent0_output -> m_shape[1] == parent1_output -> m_shape[1]) {
-        m_output = new Tensor (parent0_output -> m_shape);
+        m_output = new Tensor (parent0_output -> m_shape, 0);
         for (int i = 0; i < parent0_output -> m_size; ++i) {
             int j = i % parent1_output -> m_size;
             m_output -> m_tensor[i] = parent0_output -> m_tensor[i] + parent1_output -> m_tensor[j];

@@ -4,15 +4,17 @@
 #include "../include/Tensor.h"
 using namespace std;
 
-Tensor::Tensor (vector<int> shape) {
+Tensor::Tensor (vector<int> shape, int need_init) {
     m_size = 1;
     for (int i = 0; i < shape.size (); ++i) {
         m_shape.push_back (shape[i]);
         m_size *= shape[i];
     }
     m_tensor = (float*) malloc (m_size * sizeof (float));
-    for (int i = 0; i < m_size; ++i) {
-        m_tensor[i] = 0.0;
+    if (need_init == 1) {
+        for (int i = 0; i < m_size; ++i) {
+            m_tensor[i] = 0.0;
+        }
     }
 }
 
@@ -49,23 +51,23 @@ void Tensor::set_value (vector<int> idxs, float value) {
 }
 
 Tensor* Tensor::matrix_mult (Tensor* tensor) {
-    vector<int> idxs0 (2);
-    vector<int> idxs1 (2);
-    vector<int> idxs2 (2);
     Tensor* result = 0;
     if (m_shape[1] == tensor -> m_shape[0]) {
         vector<int> result_shape (2);
         result_shape[0] = m_shape[0];
         result_shape[1] = tensor -> m_shape[1];
-        result = new Tensor (result_shape);
+        result = new Tensor (result_shape, 0);
+        int idx0 = 0, idx1 = 0, idx2 = 0;
         for (int i = 0; i < m_shape[0]; ++i) {
             for (int j = 0; j < tensor -> m_shape[1]; ++j) {
+                float r = 0;
                 for (int k = 0; k < m_shape[1]; ++k) {
-                    idxs0[0] = i; idxs0[1] = k;
-                    idxs1[0] = k; idxs1[1] = j;
-                    idxs2[0] = i; idxs2[1] = j;
-                    result -> set_value (idxs2, result -> get_value (idxs2) + get_value (idxs0) * tensor -> get_value (idxs1));
+                    idx0 = i * m_shape[1] + k;
+                    idx1 = k * tensor -> m_shape[1] + j;
+                    r += m_tensor[idx0] * tensor -> m_tensor[idx1];
                 }
+                idx2 = i * tensor -> m_shape[1] + j;
+                result -> m_tensor[idx2] = r;
             }
         }
     }
@@ -73,7 +75,7 @@ Tensor* Tensor::matrix_mult (Tensor* tensor) {
 }
 
 Tensor* Tensor::scalar_mult (float scalar) {
-    Tensor* result = new Tensor (m_shape);
+    Tensor* result = new Tensor (m_shape, 0);
     for (int i = 0; i < m_size; ++i) {
         result -> m_tensor[i] = m_tensor[i] * scalar;
     }
@@ -101,7 +103,7 @@ Tensor* Tensor::add (Tensor* tensor) {
     }
 
     if (same_shape == 1) {
-        result = new Tensor (tensor -> m_shape);
+        result = new Tensor (tensor -> m_shape, 0);
         for (int i = 0; i < m_size; ++i) {
             result -> m_tensor[i] = m_tensor[i] + tensor -> m_tensor[i];
         }
@@ -110,7 +112,7 @@ Tensor* Tensor::add (Tensor* tensor) {
 }
 
 void Tensor::init () {
-    // srand (time (0));
+    srand (time (0));
     for (int i = 0; i < m_size; ++i) {
         m_tensor[i] = (rand () % 2000) / 1000.0 - 1.0;
     }
@@ -123,7 +125,7 @@ void Tensor::display () {
             idxs0[0] = i; idxs0[1] = j;
             cout << get_value (idxs0) << " ";
         }
-        // cout << endl;
+        cout << endl;
     }
 }
 

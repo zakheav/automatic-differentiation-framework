@@ -24,6 +24,14 @@ Tensor* int_to_tensor (int a) {// 把int转化为8位01串，左边是低位，�
     }
     return new Tensor (shape, data);
 }
+int tensor_to_int (Tensor* tensor) {
+    int result = 0;
+    for (int i = 7; i >= 0; --i) {
+        int a = tensor -> m_tensor[i] < 0.5 ? 0 : 1;
+        result = result * 2 + a;
+    }
+    return result;
+}
 void prepare_data (int num, vector<Tensor*> &add_nums, vector<Tensor*> &sums) {
     for (int i = 0; i < num; ++i) {
         int a = rand () % 128;
@@ -32,10 +40,6 @@ void prepare_data (int num, vector<Tensor*> &add_nums, vector<Tensor*> &sums) {
         Tensor* t_a = int_to_tensor (a);
         Tensor* t_b = int_to_tensor (b);
         Tensor* t_c = int_to_tensor (c);
-        //t_a -> display ();
-        //t_b -> display ();
-        //t_c -> display ();
-        // cout << a << "+" << b << "=" << c << endl;
         add_nums.push_back (t_a);
         add_nums.push_back (t_b);
         sums.push_back (t_c);
@@ -147,25 +151,23 @@ int main () {
     // 构建子图
     train_cg -> build_subgraph (abs -> m_op_node_list);
     // 训练
-    for (int i = 0; i < 10000; ++i) {
+    for (int i = 0; i < 20000; ++i) {
         vector<Node*> error;
-        if (i > 9990) {
+        if (i % 1000 == 0) {
             int ptr = ((RnnInputX*) (train_cg -> get_node ("RnnInputX:1:0:"))) -> m_data_ptr;
-            ((RnnInputX*) (train_cg -> get_node ("RnnInputX:1:0:"))) -> m_data[ptr] -> display (); cout << endl;
-            ((RnnInputX*) (train_cg -> get_node ("RnnInputX:1:0:"))) -> m_data[ptr + 1] -> display (); cout << endl;
+            cout << tensor_to_int (((RnnInputX*) (train_cg -> get_node ("RnnInputX:1:0:"))) -> m_data[ptr]) << "+"
+            << tensor_to_int (((RnnInputX*) (train_cg -> get_node ("RnnInputX:1:0:"))) -> m_data[ptr + 1]);
         }
         train_cg -> forward_propagation (error);
         train_cg -> back_propagation ();
-        if (i > 9990) {
-            ((OperatorNode*) (train_cg -> get_node ("AbsSum:1:0:"))) -> m_output -> display ();
-            ((OperatorNode*) (train_cg -> get_node ("AbsSum:1:1:"))) -> m_output -> display ();
-            ((OperatorNode*) (train_cg -> get_node ("AbsSum:1:2:"))) -> m_output -> display ();
-            ((OperatorNode*) (train_cg -> get_node ("AbsSum:1:3:"))) -> m_output -> display ();
-            ((OperatorNode*) (train_cg -> get_node ("AbsSum:1:4:"))) -> m_output -> display ();
-            ((OperatorNode*) (train_cg -> get_node ("AbsSum:1:5:"))) -> m_output -> display ();
-            ((OperatorNode*) (train_cg -> get_node ("AbsSum:1:6:"))) -> m_output -> display ();
-            ((OperatorNode*) (train_cg -> get_node ("AbsSum:1:7:"))) -> m_output -> display ();
-            cout << endl;
+        if (i % 1000 == 0) {
+            float r[8] = {0};
+            vector<int> r_shape (2); r_shape[0] = 1; r_shape[1] = 8;
+            for (int i = 0; i < sigmoid2 -> m_op_node_list.size (); ++i) {
+                r[i] = ((OperatorNode*) (sigmoid2 -> m_op_node_list[i])) -> m_output -> m_tensor[0];
+            }
+            Tensor r_tensor = Tensor (r_shape, r);
+            cout << " guess = :" << tensor_to_int (&r_tensor) << endl;
         }
         train_cg -> release_tensor ();// 释放本次迭代的中间结果张量
     }

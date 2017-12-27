@@ -37,14 +37,14 @@ int main () {
     ComputeGraph cg;
     cg.add_node ("", p1);
     cg.add_node ("", p2);
-    //cg.add_node (p1 -> get_name (), add);
-    //cg.add_node (p2 -> get_name (), add);// 测试加法
+    cg.add_node (p1 -> get_name (), add);
+    cg.add_node (p2 -> get_name (), add);// 测试加法
     //cg.add_node (p1 -> get_name (), minus);
     //cg.add_node (p2 -> get_name (), minus);// 测试减法
-    cg.add_node (p1 -> get_name (), mult);
-    cg.add_node (p2 -> get_name (), mult);// 测试乘法
+    //cg.add_node (p1 -> get_name (), mult);
+    //cg.add_node (p2 -> get_name (), mult);// 测试乘法
     //cg.add_node (p1 -> get_name (), sigmoid);// 测试sigmoid
-    cg.add_node (p1 -> get_name (), square_sum);// 测试SquareSum
+    //cg.add_node (p1 -> get_name (), square_sum);// 测试SquareSum
     //cg.add_node (p1 -> get_name (), abs_sum);// 测试AbsSum
     //cg.add_node (p1 -> get_name (), b);
     //cg.add_node (p2 -> get_name (), b);// 测试偏置
@@ -55,7 +55,7 @@ int main () {
         vector<Node*> result;
         cg.forward_propagation (result);
         cout << "fp result:................." << endl;
-        ((OperatorNode*) result[0]) -> m_output -> display ();// 前向结果
+        ((OperatorNode*) result[0]) -> m_output -> display (); cout << endl;// 前向结果
         ((OperatorNode*) result[1]) -> m_output -> display ();
         cg.back_propagation ();
         cout << "bp result:................." << endl;
