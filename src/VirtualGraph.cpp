@@ -10,6 +10,7 @@ Node* VirtualGraph::build_compute_graph (Graph* compute_graph, int idx) {// 输�
     topological_sort (m_adj_table, topo_result);
     Node* end_node = 0;
     for (int i = 0; i < topo_result.size (); ++i) {// 构建
+        // cout << topo_result[i] -> get_name () << endl;
         if (topo_result[i] -> m_name[0] == "Loop") {// 如果是循环节点
             LoopNode* loop_node = (LoopNode*) topo_result[i];
             loop_node -> inner_loop (compute_graph);// 执行循环

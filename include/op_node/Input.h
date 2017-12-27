@@ -9,5 +9,7 @@ class Input: public OperatorNode {
         std::vector<Tensor*> m_data;
         Input (std::string type, std::string id, std::string idx, std::vector<Tensor*> input_data);
         void op ();
+        void release_tensor ();
+        ~Input ();
 };
 #endif

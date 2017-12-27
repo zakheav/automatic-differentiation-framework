@@ -66,3 +66,14 @@ void Mult::grad_op () {
     chain_rule (&grad0, 0);
     chain_rule (&grad1, 1);
 }
+void Mult::release_tensor () {
+    if (m_sum_grad != 0) {
+        delete m_sum_grad;
+        m_sum_grad = 0;
+    }
+    delete m_output;
+    m_output = 0;
+}
+Mult::~Mult () {
+    release_tensor ();
+}

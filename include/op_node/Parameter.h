@@ -4,6 +4,9 @@
 #include <string>
 class Parameter: public OperatorNode {
     public:
-        Parameter (std::string type, std::string id, std::string idx, Tensor* data);
+        int m_share_data;
+        Parameter (std::string type, std::string id, std::string idx, Tensor* data, int share_data = 0);
+        ~Parameter ();
+        void release_tensor ();
 };
 #endif

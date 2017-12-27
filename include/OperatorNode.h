@@ -15,6 +15,7 @@ class OperatorNode: public Node {
         virtual void op ();
         virtual void grad_op ();
         void update ();
-        ~OperatorNode ();
+        virtual ~OperatorNode ();
+        virtual void release_tensor ();
 };
 #endif

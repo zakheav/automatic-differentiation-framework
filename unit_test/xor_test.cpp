@@ -11,13 +11,34 @@
 using namespace std;
 int main () {
     // 准备数据集
-    vector<int> shape_x; shape_x.push_back (4); shape_x.push_back (2);
-    float data_x[] = {0,0, 0,1, 1,0, 1,1};
-    Tensor* x = new Tensor (shape_x, data_x);
-
-    vector<int> shape_y; shape_y.push_back (4); shape_y.push_back (1);
-    float data_y[] = {0,1,1,0};
-    Tensor* y = new Tensor (shape_y, data_y);
+    vector<Tensor*> data_x_list;
+    vector<int> shape_x; shape_x.push_back (1); shape_x.push_back (2);
+    float data_x1[] = {0,0};
+    float data_x2[] = {0,1};
+    float data_x3[] = {1,0};
+    float data_x4[] = {1,1};
+    float data_x5[] = {1,1};
+    data_x_list.push_back (new Tensor (shape_x, data_x1));
+    data_x_list.push_back (new Tensor (shape_x, data_x2));
+    data_x_list.push_back (new Tensor (shape_x, data_x3));
+    data_x_list.push_back (new Tensor (shape_x, data_x4));
+    for (int i = 0; i < 10; ++i) {
+        data_x_list.push_back (new Tensor (shape_x, data_x5));
+    }
+    vector<Tensor*> data_y_list;
+    vector<int> shape_y; shape_y.push_back (1); shape_y.push_back (1);
+    float data_y1[] = {0};
+    float data_y2[] = {1};
+    float data_y3[] = {1};
+    float data_y4[] = {0};
+    float data_y5[] = {0};
+    data_y_list.push_back (new Tensor (shape_y, data_y1));
+    data_y_list.push_back (new Tensor (shape_y, data_y2));
+    data_y_list.push_back (new Tensor (shape_y, data_y3));
+    data_y_list.push_back (new Tensor (shape_y, data_y4));
+    for (int i = 0; i < 10; ++i) {
+        data_y_list.push_back (new Tensor (shape_y, data_y5));
+    }
 
     vector<int> shape_w1; shape_w1.push_back (2); shape_w1.push_back (4);
     Tensor* w1 = new Tensor (shape_w1);
@@ -37,10 +58,10 @@ int main () {
 
     // 准备虚拟节点
     VirtualNode* input_x = new VirtualNode ("Input", "1");
-    input_x -> m_input_data.push_back (x);
+    input_x -> m_input_data = data_x_list;
 
     VirtualNode* input_y = new VirtualNode ("Input", "2");
-    input_y -> m_input_data.push_back (y);
+    input_y -> m_input_data = data_y_list;
 
     VirtualNode* w_1 = new VirtualNode ("Parameter", "1");
     w_1 -> m_data = w1;
@@ -91,12 +112,12 @@ int main () {
     // 构建转置图，用于反向传播
     train_cg -> build_reverse_graph ();
     // 训练
-    for (int i = 0; i < 5000; ++i) {
-        vector<Tensor*> error;
+    for (int i = 0; i < 20000; ++i) {
+        vector<Node*> error;
         train_cg -> forward_propagation (error);
         train_cg -> back_propagation ();
-        if (i % 1000 == 0) {
-            error[0] -> display ();
+        if (i > 19900 ) {
+            ((OperatorNode*) error[0]) -> m_output -> display ();
         }
         train_cg -> release_tensor ();// 释放本次迭代的中间结果张量
     }
@@ -108,9 +129,9 @@ int main () {
     vg.build_compute_graph (test_cg);
     test_cg -> build_reverse_graph ();
 
-    vector<Tensor*> result;
+    vector<Node*> result;
     test_cg -> forward_propagation (result);
     // 输出结果
     cout << "final result:" << endl;
-    result[0] -> display ();
+    // ((OperatorNode*) result[0]) -> m_output -> display ();
 }

@@ -1,7 +1,9 @@
 #include <iostream>
+#include <time.h>
 #include <stdlib.h>
 #include "../include/Tensor.h"
 using namespace std;
+
 Tensor::Tensor (vector<int> shape) {
     m_size = 1;
     for (int i = 0; i < shape.size (); ++i) {
@@ -108,8 +110,9 @@ Tensor* Tensor::add (Tensor* tensor) {
 }
 
 void Tensor::init () {
+    // srand (time (0));
     for (int i = 0; i < m_size; ++i) {
-        m_tensor[i] = (rand () % 1000) / 1000.0;
+        m_tensor[i] = (rand () % 2000) / 1000.0 - 1.0;
     }
 }
 
@@ -120,9 +123,8 @@ void Tensor::display () {
             idxs0[0] = i; idxs0[1] = j;
             cout << get_value (idxs0) << " ";
         }
-        cout << endl;
+        // cout << endl;
     }
-    cout << endl;
 }
 
 Tensor::~Tensor () {

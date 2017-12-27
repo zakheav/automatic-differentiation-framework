@@ -6,5 +6,7 @@ class SquareSum: public OperatorNode {
         SquareSum (std::string type, std::string id, std::string idx);
         void op ();
         void grad_op ();
+        ~SquareSum ();
+        void release_tensor ();
 };
 #endif

@@ -28,3 +28,14 @@ void Sigmoid::grad_op () {
     }
     chain_rule (&grad, 0);
 }
+void Sigmoid::release_tensor () {
+    if (m_sum_grad != 0) {
+        delete m_sum_grad;
+        m_sum_grad = 0;
+    }
+    delete m_output;
+    m_output = 0;
+}
+Sigmoid::~Sigmoid () {
+    release_tensor ();
+}

@@ -7,5 +7,7 @@ class Add: public OperatorNode {
         Add (std::string type, std::string id, std::string idx);
         void op ();
         void grad_op ();
+        ~Add ();
+        void release_tensor ();
 };
 #endif
