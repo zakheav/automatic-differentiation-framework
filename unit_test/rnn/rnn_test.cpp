@@ -4,6 +4,7 @@
 #include "../../include/OperatorNode.h"
 #include "../../include/VirtualGraph.h"
 #include "../../include/ComputeGraph.h"
+#include "../../include/Optimizer.h"
 #include "RnnLoop.h"
 #include "RnnBranch.h"
 #include <vector>
@@ -146,6 +147,8 @@ int main () {
     // 构建计算图
     ComputeGraph* train_cg = new ComputeGraph ();
     vg -> build_compute_graph (train_cg);
+    Optimizer* optimizer = new Optimizer (0.1);
+    train_cg -> m_optimizer = optimizer;
     // 构建转置图
     train_cg -> build_reverse_graph ();
     // 构建子图
@@ -171,4 +174,7 @@ int main () {
         }
         train_cg -> release_tensor ();// 释放本次迭代的中间结果张量
     }
+
+    delete train_cg;
+    delete vg;
 }

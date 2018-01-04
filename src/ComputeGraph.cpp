@@ -13,12 +13,10 @@ void ComputeGraph::forward_propagation (vector<Node*> &result_list) {
 void ComputeGraph::back_propagation () {
     vector<Node*> topo_result;
     topological_sort (m_reverse_table, topo_result);
-    for (int i = 0; i < topo_result.size (); ++i) {
-        ((OperatorNode*) topo_result[i]) -> grad_op ();
-    }
-    // 更新权值
-    for (int i = 0; i < topo_result.size (); ++i) {
-        ((OperatorNode*) topo_result[i]) -> update ();
+    if (m_optimizer == 0) {
+        cout << "optimizer has not been set" << endl;
+    } else {
+        m_optimizer -> optimize (topo_result);
     }
 }
 void ComputeGraph::release_tensor () {
@@ -30,4 +28,6 @@ void ComputeGraph::release_tensor () {
 }
 ComputeGraph::~ComputeGraph () {
     cout << "compute graph free" << endl;
+    delete m_optimizer;
+    m_optimizer = 0;
 }

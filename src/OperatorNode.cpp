@@ -3,7 +3,6 @@
 using namespace std;
 OperatorNode::OperatorNode (string type, string id, string idx): Node (type, id) {
     m_name.push_back (idx);
-    m_a = 0.2;
     m_sum_grad = 0;
     m_output = 0;
 }
@@ -36,13 +35,6 @@ void OperatorNode::chain_rule (Tensor* grad, int parent_idx) {
 void OperatorNode::op () {
 }
 void OperatorNode::grad_op () {
-}
-void OperatorNode::update () {
-    if (m_sum_grad != 0 && m_name[0] == "Parameter") {
-        for (int i = 0; i < m_output -> m_size; ++i) {
-            m_output -> m_tensor[i] -= m_a * m_sum_grad -> m_tensor[i];
-        }
-    }
 }
 void OperatorNode::release_tensor () {
 }

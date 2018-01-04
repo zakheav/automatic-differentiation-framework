@@ -7,6 +7,7 @@
 #include "../include/VirtualGraph.h"
 #include "../include/ComputeGraph.h"
 #include "../include/VirtualNode.h"
+#include "../include/Optimizer.h"
 #include <iostream>
 using namespace std;
 int main () {
@@ -77,30 +78,33 @@ int main () {
     VirtualNode* bias2 = new VirtualNode ("Bias", "2");
 
     // 构建虚拟图
-    VirtualGraph vg;
-    vg.add_node ("", input_x);
-    vg.add_node ("", w_1);
-    vg.add_node (input_x -> get_name (), mult1);
-    vg.add_node (w_1 -> get_name (), mult1);
-    vg.add_node ("", b_1);
-    vg.add_node (mult1 -> get_name (), bias1);
-    vg.add_node (b_1 -> get_name (), bias1);
-    vg.add_node (bias1 -> get_name (), sig1);
-    vg.add_node ("", w_2);
-    vg.add_node (sig1 -> get_name (), mult2);
-    vg.add_node (w_2 -> get_name (), mult2);
-    vg.add_node ("", b_2);
-    vg.add_node (mult2 -> get_name (), bias2);
-    vg.add_node (b_2 -> get_name (), bias2);
-    vg.add_node (bias2 -> get_name (), sig2);
-    vg.add_node ("", input_y);
-    vg.add_node (sig2 -> get_name (), minus);
-    vg.add_node (input_y -> get_name (), minus);
-    vg.add_node (minus -> get_name (), ss);
+    VirtualGraph* vg = new VirtualGraph ();
+    vg -> add_node ("", input_x);
+    vg -> add_node ("", w_1);
+    vg -> add_node (input_x -> get_name (), mult1);
+    vg -> add_node (w_1 -> get_name (), mult1);
+    vg -> add_node ("", b_1);
+    vg -> add_node (mult1 -> get_name (), bias1);
+    vg -> add_node (b_1 -> get_name (), bias1);
+    vg -> add_node (bias1 -> get_name (), sig1);
+    vg -> add_node ("", w_2);
+    vg -> add_node (sig1 -> get_name (), mult2);
+    vg -> add_node (w_2 -> get_name (), mult2);
+    vg -> add_node ("", b_2);
+    vg -> add_node (mult2 -> get_name (), bias2);
+    vg -> add_node (b_2 -> get_name (), bias2);
+    vg -> add_node (bias2 -> get_name (), sig2);
+    vg -> add_node ("", input_y);
+    vg -> add_node (sig2 -> get_name (), minus);
+    vg -> add_node (input_y -> get_name (), minus);
+    vg -> add_node (minus -> get_name (), ss);
 
     // 生成计算图
     ComputeGraph* train_cg = new ComputeGraph ();
-    vg.build_compute_graph (train_cg);
+    vg -> build_compute_graph (train_cg);
+    // 初始化优化器，普通sgd
+    Optimizer* optimizer = new Optimizer (0.2);
+    train_cg -> m_optimizer = optimizer;
     // 构建转置图，用于反向传播
     train_cg -> build_reverse_graph ();
     // 训练
@@ -119,4 +123,7 @@ int main () {
         }
         train_cg -> release_tensor ();// 释放本次迭代的中间结果张量
     }
+
+    delete train_cg;
+    delete vg;
 }

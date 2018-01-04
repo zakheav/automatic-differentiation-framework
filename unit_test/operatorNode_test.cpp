@@ -9,6 +9,7 @@
 #include "../include/ComputeGraph.h"
 #include "../include/Tensor.h"
 #include "../include/OperatorNode.h"
+#include "../include/Optimizer.h"
 #include <vector>
 #include <iostream>
 using namespace std;
@@ -50,13 +51,16 @@ int main () {
     //cg.add_node (p2 -> get_name (), b);// 测试偏置
     // 构建转置图
     cg.build_reverse_graph ();
+    // 初始化优化器，普通sgd
+    Optimizer* optimizer = new Optimizer (0.1);
+    cg.m_optimizer = optimizer;
     
     for (int i = 0; i < 1; ++i) {
         vector<Node*> result;
         cg.forward_propagation (result);
         cout << "fp result:................." << endl;
         ((OperatorNode*) result[0]) -> m_output -> display (); cout << endl;// 前向结果
-        ((OperatorNode*) result[1]) -> m_output -> display ();
+        //((OperatorNode*) result[1]) -> m_output -> display ();
         cg.back_propagation ();
         cout << "bp result:................." << endl;
         p1 -> m_sum_grad -> display (); cout << endl;
