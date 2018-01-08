@@ -7,7 +7,7 @@ RnnInputY::RnnInputY (string type, string id, string idx, vector<Tensor*> input_
 }
 void RnnInputY::op () {
     int batch_size = 1;
-    float* data = (float*) malloc (sizeof (float) * 1 * batch_size);
+    float* data = new float[1 * batch_size];
     vector<int> shape (2); shape[0] = batch_size; shape[1] = 1;
     for (int i = 0; i < batch_size; ++i) {
         Tensor* a = m_data[m_data_ptr];

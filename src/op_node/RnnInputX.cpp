@@ -9,7 +9,7 @@ RnnInputX::RnnInputX (string type, string id, string idx, vector<Tensor*> input_
 void RnnInputX::op () {
     int batch_size = 1;
     vector<int> shape (2); shape[0] = batch_size; shape[1] = 2;
-    float* data = (float*) malloc (sizeof (float) * 2 * batch_size);
+    float* data = new float[2 * batch_size];
     for (int i = 0; i < batch_size; ++i) {
         Tensor* a = m_data[m_data_ptr];
         Tensor* b = m_data[m_data_ptr + 1];

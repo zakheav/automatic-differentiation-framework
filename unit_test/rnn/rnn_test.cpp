@@ -14,7 +14,7 @@
 #include <stdlib.h>
 using namespace std;
 Tensor* int_to_tensor (int a) {// 把int转化为8位01串，左边是低位，右边是高位
-    float* data = (float*) malloc (8 * sizeof (float));
+    float* data = new float[8];
     vector<int> shape (2); shape[0] = 1; shape[1] = 8;
     int mask = 1;
     for (int i = 0; i < 8; ++i) {

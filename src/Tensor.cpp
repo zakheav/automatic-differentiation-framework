@@ -10,7 +10,7 @@ Tensor::Tensor (vector<int> shape, int need_init) {
         m_shape.push_back (shape[i]);
         m_size *= shape[i];
     }
-    m_tensor = (float*) malloc (m_size * sizeof (float));
+    m_tensor = new float[m_size];
     if (need_init == 1) {
         for (int i = 0; i < m_size; ++i) {
             m_tensor[i] = 0.0;
@@ -24,7 +24,7 @@ Tensor::Tensor (vector<int> shape, float data[]) {
         m_shape.push_back (shape[i]);
         m_size *= shape[i];
     }
-    m_tensor = (float*) malloc (m_size * sizeof (float));
+    m_tensor = new float[m_size];
     for (int i = 0; i < m_size; ++i) {
         m_tensor[i] = data[i];
     }
