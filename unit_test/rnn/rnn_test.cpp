@@ -5,10 +5,12 @@
 #include "../../include/VirtualGraph.h"
 #include "../../include/ComputeGraph.h"
 #include "../../include/Optimizer.h"
+#include "../../include/optimizer/Adadelta.h"
 #include "RnnLoop.h"
 #include "RnnBranch.h"
 #include <vector>
 #include <iostream>
+#include <sstream>
 #include <stdlib.h>
 using namespace std;
 Tensor* int_to_tensor (int a) {// 把int转化为8位01串，左边是低位，右边是高位
@@ -147,12 +149,18 @@ int main () {
     // 构建计算图
     ComputeGraph* train_cg = new ComputeGraph ();
     vg -> build_compute_graph (train_cg);
-    Optimizer* optimizer = new Optimizer (0.1);
+    Optimizer* optimizer = new Adadelta (0.1);
     train_cg -> m_optimizer = optimizer;
     // 构建转置图
     train_cg -> build_reverse_graph ();
     // 构建子图
-    train_cg -> build_subgraph (abs -> m_op_node_list);
+    vector<Node*> endnode_list;
+    unordered_map<string, Node*>::iterator op_node_map_it = abs -> m_op_node_map.begin ();
+    while (op_node_map_it != abs -> m_op_node_map.end ()) {
+        endnode_list.push_back (op_node_map_it -> second);
+        ++op_node_map_it;
+    }
+    train_cg -> build_subgraph (endnode_list);
     // 训练
     for (int i = 0; i < 20000; ++i) {
         vector<Node*> error;
@@ -166,8 +174,11 @@ int main () {
         if (i % 1000 == 0) {
             float r[8] = {0};
             vector<int> r_shape (2); r_shape[0] = 1; r_shape[1] = 8;
-            for (int i = 0; i < sigmoid2 -> m_op_node_list.size (); ++i) {
-                r[i] = ((OperatorNode*) (sigmoid2 -> m_op_node_list[i])) -> m_output -> m_tensor[0];
+            for (int i = 0; i < 8; ++i) {
+                ostringstream oss;
+                oss << i << ":";
+                string op_node_name = sigmoid2 -> get_name () + oss.str ();
+                r[i] = ((OperatorNode*) (sigmoid2 -> m_op_node_map[op_node_name])) -> m_output -> m_tensor[0];
             }
             Tensor r_tensor = Tensor (r_shape, r);
             cout << " guess = :" << tensor_to_int (&r_tensor) << endl;

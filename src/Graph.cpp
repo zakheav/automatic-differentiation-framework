@@ -20,7 +20,7 @@ Node* Graph::get_node (string name) {
         return m_node_map[name];
     }
 }
-void Graph::build_subgraph (vector<Node*> endnode_list) {
+void Graph::build_subgraph (vector<Node*> &endnode_list) {
     unordered_map<string, Node*>::iterator node_map_it = m_node_map.begin ();
     while (node_map_it != m_node_map.end ()) {// 所有节点设置为不可见
         node_map_it -> second -> m_invisible = 1;
@@ -29,11 +29,9 @@ void Graph::build_subgraph (vector<Node*> endnode_list) {
     // 构造子图
     queue<Node*> q;
     unordered_set<Node*> visit;
-    vector<Node*>::iterator endnode_list_it = endnode_list.begin ();
-    while (endnode_list_it != endnode_list.end ()) {
-        q.push (*endnode_list_it);
-        visit.insert (*endnode_list_it);
-        ++endnode_list_it;
+    for (int i = 0; i < endnode_list.size (); ++i) {
+        q.push (endnode_list[i]);
+        visit.insert (endnode_list[i]);
     }
     while (!q.empty ()) {
         Node* node = q.front ();
@@ -127,4 +125,7 @@ Graph::~Graph () {
         node_map_it -> second = 0;
         ++node_map_it;
     }
+    m_node_map.clear ();
+    m_adj_table.clear ();
+    m_reverse_table.clear ();
 }

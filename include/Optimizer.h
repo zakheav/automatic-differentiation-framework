@@ -3,10 +3,11 @@
 #include <vector>
 #include "Node.h"
 class Optimizer {
-    public:
+    protected:
         float m_a;
+    public:
         Optimizer (float a);
-        void optimize (std::vector<Node*> &topo_results);
+        virtual void optimize (std::vector<Node*> &topo_results);
         virtual ~Optimizer ();
 };
 #endif

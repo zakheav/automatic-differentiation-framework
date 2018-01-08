@@ -82,6 +82,18 @@ Tensor* Tensor::scalar_mult (float scalar) {
     return result;
 }
 
+void Tensor::scalar_acc_mult (float scalar) {
+    for (int i = 0; i < m_size; ++i) {
+        m_tensor[i] = m_tensor[i] * scalar;
+    }
+}
+
+void Tensor::element_square () {
+    for (int i = 0; i < m_size; ++i) {
+        m_tensor[i] = m_tensor[i] * m_tensor[i];
+    }
+}
+
 void Tensor::add (Tensor* tensor, Tensor* result) {
     for (int i = 0; i < m_size; ++i) {
         result -> m_tensor[i] = m_tensor[i] + tensor -> m_tensor[i];

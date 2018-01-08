@@ -12,6 +12,8 @@ class Tensor {
         void set_value (std::vector<int> idxs, float value);// 设置某坐标下的值
         Tensor* matrix_mult (Tensor* tensor);// 二维矩阵乘法
         Tensor* scalar_mult (float scalar);// 标量乘法
+        void scalar_acc_mult (float scalar);// 标量累乘
+        void element_square ();// 逐元素平方
         void add (Tensor* tensor, Tensor* result);// 累加
         Tensor* add (Tensor* tensor);// 普通加法
         void init ();

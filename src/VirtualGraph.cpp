@@ -47,4 +47,15 @@ Node* VirtualGraph::build_compute_graph (Graph* compute_graph, int idx) {// 输�
 }
 VirtualGraph::~VirtualGraph () {
     cout << "virtual graph free" << endl;
+    // 释放虚拟节点
+    cout << "virtual node_map free" << endl;
+    unordered_map<string, Node*>::iterator node_map_it = m_node_map.begin ();
+    while (node_map_it != m_node_map.end ()) {
+        delete node_map_it -> second;
+        node_map_it -> second = 0;
+        ++node_map_it;
+    }
+    m_node_map.clear ();
+    m_adj_table.clear ();
+    m_reverse_table.clear ();
 }

@@ -30,4 +30,7 @@ ComputeGraph::~ComputeGraph () {
     cout << "compute graph free" << endl;
     delete m_optimizer;
     m_optimizer = 0;
+    m_node_map.clear ();
+    m_adj_table.clear ();
+    m_reverse_table.clear ();
 }

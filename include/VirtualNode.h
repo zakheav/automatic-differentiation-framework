@@ -5,12 +5,12 @@
 #include "OperatorNode.h"
 #include "Graph.h"
 #include <string>
-#include <vector>
+#include <unordered_map>
 class VirtualNode: public Node {
     public:
         Tensor* m_data;
         std::vector<Tensor*> m_input_data;
-        std::vector<Node*> m_op_node_list;
+        std::unordered_map<std::string, Node*> m_op_node_map;
         int m_share_parameter;
         VirtualNode (std::string type, std::string id, int share_parameter = 0);
         void get_parents_op_nodes (int idx, Graph* compute_graph, std::vector<Node*> &node_list);

@@ -8,6 +8,7 @@
 #include "../include/ComputeGraph.h"
 #include "../include/VirtualNode.h"
 #include "../include/Optimizer.h"
+#include "../include/optimizer/Adadelta.h"
 #include <iostream>
 using namespace std;
 int main () {
@@ -102,8 +103,8 @@ int main () {
     // 生成计算图
     ComputeGraph* train_cg = new ComputeGraph ();
     vg -> build_compute_graph (train_cg);
-    // 初始化优化器，普通sgd
-    Optimizer* optimizer = new Optimizer (0.2);
+    // 初始化优化器，Adadelta
+    Optimizer* optimizer = new Adadelta (0.2);
     train_cg -> m_optimizer = optimizer;
     // 构建转置图，用于反向传播
     train_cg -> build_reverse_graph ();
@@ -119,7 +120,7 @@ int main () {
         train_cg -> back_propagation ();
         if (i >= 9900) {
             cout << "xor: ";
-            ((OperatorNode*) (sig2 -> m_op_node_list[0])) -> m_output -> display (); cout << endl;
+            ((OperatorNode*) (sig2 -> m_op_node_map["Sigmoid:2:0:"])) -> m_output -> display (); cout << endl;
         }
         train_cg -> release_tensor ();// 释放本次迭代的中间结果张量
     }
