@@ -53,20 +53,22 @@ int main () {
     vector<Tensor*> add_nums;
     vector<Tensor*> sums;
     prepare_data (10000, add_nums, sums);
-    
-    vector<int> shape_w1 (2); shape_w1[0] = 2; shape_w1[1] = 4;
+
+    int hidden_size = 8;
+
+    vector<int> shape_w1 (2); shape_w1[0] = 2; shape_w1[1] = hidden_size;
     Tensor* t_w1 = new Tensor (shape_w1);
     t_w1 -> init ();
 
-    vector<int> shape_w2 (2); shape_w2[0] = 4; shape_w2[1] = 1;
+    vector<int> shape_w2 (2); shape_w2[0] = hidden_size; shape_w2[1] = 1;
     Tensor* t_w2 = new Tensor (shape_w2);
     t_w2 -> init ();
     
-    vector<int> shape_wh (2); shape_wh[0] = 4; shape_wh[1] = 4;
+    vector<int> shape_wh (2); shape_wh[0] = hidden_size; shape_wh[1] = hidden_size;
     Tensor* t_wh = new Tensor (shape_wh);
     t_wh -> init ();
 
-    vector<int> shape_b1 (2); shape_b1[0] = 1; shape_b1[1] = 4;
+    vector<int> shape_b1 (2); shape_b1[0] = 1; shape_b1[1] = hidden_size;
     Tensor* t_b1 = new Tensor (shape_b1);
     t_b1 -> init ();
 
