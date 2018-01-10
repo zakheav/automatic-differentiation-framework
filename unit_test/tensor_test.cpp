@@ -30,6 +30,10 @@ int main () {
     cout << "add test 2" << endl;
     add_result -> display ();
 
+    Tensor* ele_mult_result = tensor1 -> element_mult (tensor2);
+    cout << "element mult test" << endl;
+    ele_mult_result -> display ();
+
     Tensor* scalar_mult_result = tensor1 -> scalar_mult (3.0);// 标量乘法
     cout << "scalar mult test" << endl;
     scalar_mult_result -> display ();
@@ -41,6 +45,7 @@ int main () {
     Tensor* three_dim_tensor = new Tensor (shape1, data1);
     vector<int> idxs (3);
     idxs[0] = 1; idxs[1] = 1; idxs[2] = 0;
+    cout << "index value test" << endl;
     cout << three_dim_tensor -> get_value (idxs) << endl;
 
 }

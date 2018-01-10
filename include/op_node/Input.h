@@ -1,7 +1,6 @@
 #ifndef INPUT_H_
 #define INPUT_H_
 #include "../OperatorNode.h"
-#include <string>
 #include <vector>
 class Input: public OperatorNode {
     public:

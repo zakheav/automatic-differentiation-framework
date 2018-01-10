@@ -12,11 +12,13 @@
 #include "../include/op_node/Parameter.h"
 #include "../include/op_node/RnnInputX.h"
 #include "../include/op_node/RnnInputY.h"
+#include "../include/op_node/Dropout.h"
 #include <sstream>
 #include <iostream>
 using namespace std;
-VirtualNode::VirtualNode (string type, string id, int share_parameter): Node (type, id) {
+VirtualNode::VirtualNode (string type, string id, int share_parameter, float keep_rate): Node (type, id) {
     m_share_parameter = share_parameter;
+    m_keep_rate = keep_rate;
 }
 void VirtualNode::get_parents_op_nodes (int idx, Graph* compute_graph, vector<Node*> &node_list) {
     ostringstream oss;
@@ -75,6 +77,12 @@ Node* VirtualNode::get_op_node (int idx) {// 一个OperatorNode工厂
                 cout << "input data is not initialize" << endl;
             } else {
                 op_node = new RnnInputY (m_name[0], m_name[1], oss.str (), m_input_data);
+            }
+        } else if (m_name[0] == "Dropout") {
+            if (m_data == 0) {
+                cout << "dropout filter shape is not set" << endl;
+            } else {
+                op_node = new Dropout (m_name[0], m_name[1], oss.str (), m_data, m_keep_rate);
             }
         } else {
             cout << "op node name error" << endl;

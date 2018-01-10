@@ -6,6 +6,7 @@
 #include "../include/op_node/Mult.h"
 #include "../include/op_node/Sigmoid.h"
 #include "../include/op_node/Parameter.h"
+#include "../include/op_node/Dropout.h"
 #include "../include/ComputeGraph.h"
 #include "../include/Tensor.h"
 #include "../include/OperatorNode.h"
@@ -33,13 +34,14 @@ int main () {
     OperatorNode* square_sum = new SquareSum ("SquareSum", "1", "0");
     OperatorNode* abs_sum = new AbsSum ("AbsSum", "1", "0");
     OperatorNode* b = new Bias ("Bias", "1", "0");
+    OperatorNode* dropout = new Dropout ("Dropout", "1", "0", t2, 0.5);
 
     // 构建计算图
     ComputeGraph cg;
     cg.add_node ("", p1);
-    cg.add_node ("", p2);
-    cg.add_node (p1 -> get_name (), add);
-    cg.add_node (p2 -> get_name (), add);// 测试加法
+    //cg.add_node ("", p2);
+    //cg.add_node (p1 -> get_name (), add);
+    //cg.add_node (p2 -> get_name (), add);// 测试加法
     //cg.add_node (p1 -> get_name (), minus);
     //cg.add_node (p2 -> get_name (), minus);// 测试减法
     //cg.add_node (p1 -> get_name (), mult);
@@ -49,6 +51,7 @@ int main () {
     //cg.add_node (p1 -> get_name (), abs_sum);// 测试AbsSum
     //cg.add_node (p1 -> get_name (), b);
     //cg.add_node (p2 -> get_name (), b);// 测试偏置
+    cg.add_node (p1 -> get_name (), dropout);// 测试dropout
     // 构建转置图
     cg.build_reverse_graph ();
     // 初始化优化器，普通sgd
@@ -64,10 +67,10 @@ int main () {
         cg.back_propagation ();
         cout << "bp result:................." << endl;
         p1 -> m_sum_grad -> display (); cout << endl;
-        p2 -> m_sum_grad -> display ();// 反向结果
+        //p2 -> m_sum_grad -> display ();// 反向结果
         cout << "new parameter:............." << endl;
         p1 -> m_output -> display (); cout << endl;
-        p2 -> m_output -> display ();
+        //p2 -> m_output -> display ();
         cg.release_tensor ();
     }
 }

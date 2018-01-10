@@ -12,7 +12,8 @@ class VirtualNode: public Node {
         std::vector<Tensor*> m_input_data;
         std::unordered_map<std::string, Node*> m_op_node_map;
         int m_share_parameter;
-        VirtualNode (std::string type, std::string id, int share_parameter = 0);
+        float m_keep_rate;
+        VirtualNode (std::string type, std::string id, int share_parameter = 0, float keep_rate = 0.5);
         void get_parents_op_nodes (int idx, Graph* compute_graph, std::vector<Node*> &node_list);
         Node* get_op_node (int idx);
         ~VirtualNode ();

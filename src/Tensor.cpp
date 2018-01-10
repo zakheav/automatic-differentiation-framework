@@ -94,6 +94,28 @@ void Tensor::element_square () {
     }
 }
 
+Tensor* Tensor::element_mult (Tensor* tensor) {
+    Tensor* result = 0;
+    int same_shape = 1;
+    if (m_shape.size () == tensor -> m_shape.size ()) {
+        for (int i = 0; i < m_shape.size (); ++i) {
+            if (m_shape[i] != tensor -> m_shape[i]) {
+                same_shape = 0;
+                break;
+            }
+        }
+    } else {
+        same_shape = 0;
+    }
+    if (same_shape == 1) {
+        result = new Tensor (tensor -> m_shape, 0);
+        for (int i = 0; i < m_size; ++i) {
+            result -> m_tensor[i] = m_tensor[i] * tensor -> m_tensor[i];
+        }
+    }
+    return result;
+}
+
 void Tensor::add (Tensor* tensor, Tensor* result) {
     for (int i = 0; i < m_size; ++i) {
         result -> m_tensor[i] = m_tensor[i] + tensor -> m_tensor[i];
@@ -124,9 +146,9 @@ Tensor* Tensor::add (Tensor* tensor) {
 }
 
 void Tensor::init () {
-    srand (time (0));
+    // srand (time (0));
     for (int i = 0; i < m_size; ++i) {
-        m_tensor[i] = (rand () % 2000) / 1000.0 - 1.0;
+        m_tensor[i] = (rand () % 1000) / 1000.0 - 0.5;
     }
 }
 
