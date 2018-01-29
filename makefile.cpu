@@ -1,10 +1,10 @@
 all: 
 
-rnn_test: obj/rnn_test.o obj/RnnLoop.o obj/RnnBranch.o obj/Graph.o obj/VirtualGraph.o obj/Optimizer.o obj/Adadelta.o obj/BranchNode.o obj/LoopNode.o obj/ComputeGraph.o obj/Node.o obj/VirtualNode.o obj/OperatorNode.o obj/Dropout.o obj/Input.o obj/Add.o obj/AbsSum.o obj/Bias.o obj/Mult.o obj/Minus.o obj/SquareSum.o obj/Sigmoid.o obj/Parameter.o obj/RnnInputX.o obj/RnnInputY.o obj/Tensor.o obj/cuda_lib.o
-	g++ -std=c++11 obj/rnn_test.o obj/RnnLoop.o obj/RnnBranch.o obj/Graph.o obj/VirtualGraph.o obj/Optimizer.o obj/Adadelta.o obj/BranchNode.o obj/LoopNode.o obj/ComputeGraph.o obj/Node.o obj/VirtualNode.o obj/OperatorNode.o obj/Dropout.o obj/Input.o obj/Add.o obj/AbsSum.o obj/Bias.o obj/Mult.o obj/Minus.o obj/SquareSum.o obj/Sigmoid.o obj/Parameter.o obj/RnnInputX.o obj/RnnInputY.o obj/Tensor.o obj/cuda_lib.o -L/usr/local/cuda/lib64 -lcudart -o rnn_test
+rnn_test: obj/rnn_test.o obj/RnnLoop.o obj/RnnBranch.o obj/Graph.o obj/VirtualGraph.o obj/Optimizer.o obj/Adadelta.o obj/BranchNode.o obj/LoopNode.o obj/ComputeGraph.o obj/Node.o obj/VirtualNode.o obj/OperatorNode.o obj/Dropout.o obj/Input.o obj/Add.o obj/AbsSum.o obj/Bias.o obj/Mult.o obj/Minus.o obj/SquareSum.o obj/Sigmoid.o obj/Parameter.o obj/RnnInputX.o obj/RnnInputY.o obj/Tensor.o
+	g++ -std=c++11 obj/rnn_test.o obj/RnnLoop.o obj/RnnBranch.o obj/Graph.o obj/VirtualGraph.o obj/Optimizer.o obj/Adadelta.o obj/BranchNode.o obj/LoopNode.o obj/ComputeGraph.o obj/Node.o obj/VirtualNode.o obj/OperatorNode.o obj/Dropout.o obj/Input.o obj/Add.o obj/AbsSum.o obj/Bias.o obj/Mult.o obj/Minus.o obj/SquareSum.o obj/Sigmoid.o obj/Parameter.o obj/RnnInputX.o obj/RnnInputY.o obj/Tensor.o -o rnn_test
 
-xor_test: obj/xor_test.o obj/Graph.o obj/VirtualGraph.o obj/ComputeGraph.o obj/Optimizer.o obj/Adadelta.o obj/Node.o obj/VirtualNode.o obj/OperatorNode.o obj/Dropout.o obj/Input.o obj/Add.o obj/Bias.o obj/Mult.o obj/Minus.o obj/SquareSum.o obj/Sigmoid.o obj/AbsSum.o obj/Parameter.o obj/RnnInputX.o obj/RnnInputY.o obj/Tensor.o obj/cuda_lib.o
-	g++ -std=c++11 obj/xor_test.o obj/Graph.o obj/VirtualGraph.o obj/ComputeGraph.o obj/Optimizer.o obj/Adadelta.o obj/Node.o obj/VirtualNode.o obj/OperatorNode.o obj/Dropout.o obj/Input.o obj/Add.o obj/Bias.o obj/Mult.o obj/Minus.o obj/SquareSum.o obj/Sigmoid.o obj/AbsSum.o obj/Parameter.o obj/RnnInputX.o obj/RnnInputY.o obj/Tensor.o obj/cuda_lib.o -L/usr/local/cuda/lib64 -lcudart -o xor_test
+xor_test: obj/xor_test.o obj/Graph.o obj/VirtualGraph.o obj/ComputeGraph.o obj/Optimizer.o obj/Adadelta.o obj/Node.o obj/VirtualNode.o obj/OperatorNode.o obj/Dropout.o obj/Input.o obj/Add.o obj/Bias.o obj/Mult.o obj/Minus.o obj/SquareSum.o obj/Sigmoid.o obj/AbsSum.o obj/Parameter.o obj/RnnInputX.o obj/RnnInputY.o obj/Tensor.o
+	g++ -std=c++11 obj/xor_test.o obj/Graph.o obj/VirtualGraph.o obj/ComputeGraph.o obj/Optimizer.o obj/Adadelta.o obj/Node.o obj/VirtualNode.o obj/OperatorNode.o obj/Dropout.o obj/Input.o obj/Add.o obj/Bias.o obj/Mult.o obj/Minus.o obj/SquareSum.o obj/Sigmoid.o obj/AbsSum.o obj/Parameter.o obj/RnnInputX.o obj/RnnInputY.o obj/Tensor.o -o xor_test
 
 graph_test: obj/graph_test.o obj/Graph.o obj/Node.o
 	g++ -std=c++11 obj/graph_test.o obj/Graph.o obj/Node.o -o graph_test
@@ -12,8 +12,8 @@ graph_test: obj/graph_test.o obj/Graph.o obj/Node.o
 tensor_test: obj/tensor_test.o obj/Tensor.o
 	g++ -std=c++11 obj/tensor_test.o obj/Tensor.o -o tensor_test
 
-operatorNode_test: obj/operatorNode_test.o obj/ComputeGraph.o obj/Optimizer.o obj/Graph.o obj/Dropout.o obj/Sigmoid.o obj/AbsSum.o obj/SquareSum.o obj/Add.o obj/Bias.o obj/Mult.o obj/Minus.o obj/Parameter.o obj/OperatorNode.o obj/Node.o obj/Tensor.o obj/cuda_lib.o
-	g++ -std=c++11 obj/operatorNode_test.o obj/ComputeGraph.o obj/Optimizer.o obj/Graph.o obj/Dropout.o obj/Sigmoid.o obj/AbsSum.o obj/SquareSum.o obj/Add.o obj/Bias.o obj/Mult.o obj/Minus.o obj/Parameter.o obj/OperatorNode.o obj/Node.o obj/Tensor.o obj/cuda_lib.o -L/usr/local/cuda/lib64 -lcudart -o operatorNode_test
+operatorNode_test: obj/operatorNode_test.o obj/ComputeGraph.o obj/Optimizer.o obj/Graph.o obj/Dropout.o obj/Sigmoid.o obj/AbsSum.o obj/SquareSum.o obj/Add.o obj/Bias.o obj/Mult.o obj/Minus.o obj/Parameter.o obj/OperatorNode.o obj/Node.o obj/Tensor.o
+	g++ -std=c++11 obj/operatorNode_test.o obj/ComputeGraph.o obj/Optimizer.o obj/Graph.o obj/Dropout.o obj/Sigmoid.o obj/AbsSum.o obj/SquareSum.o obj/Add.o obj/Bias.o obj/Mult.o obj/Minus.o obj/Parameter.o obj/OperatorNode.o obj/Node.o obj/Tensor.o -o operatorNode_test
 
 obj/rnn_test.o: unit_test/rnn/rnn_test.cpp
 	g++ -std=c++11 -c unit_test/rnn/rnn_test.cpp -o obj/rnn_test.o
@@ -85,15 +85,8 @@ obj/Optimizer.o: src/Optimizer.cpp
 obj/Adadelta.o: src/optimizer/Adadelta.cpp
 	g++ -std=c++11 -c src/optimizer/Adadelta.cpp -o obj/Adadelta.o
 
-# cpu based
-#obj/Tensor.o: src/Tensor.cpp
-#	g++ -std=c++11 -c src/Tensor.cpp -o obj/Tensor.o
-
-# gpu based
-obj/Tensor.o: src/cuda/Tensor.cpp obj/cuda_lib.o
-	g++ -std=c++11 -c src/cuda/Tensor.cpp -o obj/Tensor.o
-obj/cuda_lib.o: src/cuda/cuda_lib.cu
-	nvcc -c -I/include/cuda -I/usr/local/cuda/include src/cuda/cuda_lib.cu -o obj/cuda_lib.o
+obj/Tensor.o: src/Tensor.cpp
+	g++ -std=c++11 -c src/Tensor.cpp -o obj/Tensor.o
 
 clean:
 	rm obj/*o 

@@ -1,7 +1,8 @@
 #include <iostream>
 #include <time.h>
 #include <stdlib.h>
-#include "../include/Tensor.h"
+#include "../../include/Tensor.h"
+#include "../../include/cuda/cuda_lib.h"
 using namespace std;
 
 Tensor::Tensor (vector<int> shape, int need_init) {
@@ -57,19 +58,8 @@ Tensor* Tensor::matrix_mult (Tensor* tensor) {
         result_shape[0] = m_shape[0];
         result_shape[1] = tensor -> m_shape[1];
         result = new Tensor (result_shape, 0);
-        int idx0 = 0, idx1 = 0, idx2 = 0;
-        for (int i = 0; i < m_shape[0]; ++i) {
-            for (int j = 0; j < tensor -> m_shape[1]; ++j) {
-                float r = 0;
-                for (int k = 0; k < m_shape[1]; ++k) {
-                    idx0 = i * m_shape[1] + k;
-                    idx1 = k * tensor -> m_shape[1] + j;
-                    r += m_tensor[idx0] * tensor -> m_tensor[idx1];
-                }
-                idx2 = i * tensor -> m_shape[1] + j;
-                result -> m_tensor[idx2] = r;
-            }
-        }
+        // 调用cuda
+        cuda_matrix_mult (m_tensor, tensor -> m_tensor, result -> m_tensor, m_shape[0], m_shape[1], tensor -> m_shape[0], tensor -> m_shape[1]);
     }
     return result;
 }
@@ -88,18 +78,17 @@ void Tensor::scalar_acc_mult (float scalar) {
     }
 }
 
+float Tensor::element_square_sum () {
+    float result = 0;
+    // 调用cuda
+    result = cuda_element_square_sum (m_tensor, m_size);
+    return result;
+}
+
 void Tensor::element_square () {
     for (int i = 0; i < m_size; ++i) {
         m_tensor[i] = m_tensor[i] * m_tensor[i];
     }
-}
-
-float Tensor::element_square_sum () {
-    float result = 0;
-    for (int i = 0; i < m_size; ++i) {
-        result += m_tensor[i] * m_tensor[i];
-    }
-    return result;
 }
 
 Tensor* Tensor::element_mult (Tensor* tensor) {
@@ -174,3 +163,4 @@ void Tensor::display () {
 Tensor::~Tensor () {
     delete m_tensor;
 }
+

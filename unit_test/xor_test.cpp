@@ -34,15 +34,15 @@ int main () {
     data_y_list.push_back (new Tensor (shape_y, data_y3));
     data_y_list.push_back (new Tensor (shape_y, data_y4));
 
-    vector<int> shape_w1; shape_w1.push_back (2); shape_w1.push_back (4);
+    vector<int> shape_w1; shape_w1.push_back (2); shape_w1.push_back (16);
     Tensor* w1 = new Tensor (shape_w1);
     w1 -> init ();
 
-    vector<int> shape_w2; shape_w2.push_back (4); shape_w2.push_back (1);
+    vector<int> shape_w2; shape_w2.push_back (16); shape_w2.push_back (1);
     Tensor* w2 = new Tensor (shape_w2);
     w2 -> init ();
 
-    vector<int> shape_b1; shape_b1.push_back (1); shape_b1.push_back (4);
+    vector<int> shape_b1; shape_b1.push_back (1); shape_b1.push_back (16);
     Tensor* b1 = new Tensor (shape_b1);
     b1 -> init ();
 
@@ -110,7 +110,7 @@ int main () {
     train_cg -> build_reverse_graph ();
     // 训练
     for (int i = 0; i < 10000; ++i) {
-        if (i >= 9900) {
+        if (i % 100 == 0) {
             cout << "input: ";
             int ptr = ((Input*) (train_cg -> get_node ("Input:1:0:"))) -> m_data_ptr;
             ((Input*) (train_cg -> get_node ("Input:1:0:"))) -> m_data[ptr] -> display ();
@@ -118,7 +118,7 @@ int main () {
         vector<Node*> error;
         train_cg -> forward_propagation (error);
         train_cg -> back_propagation ();
-        if (i >= 9900) {
+        if (i % 100 == 0) {
             cout << "xor: ";
             ((OperatorNode*) (sig2 -> m_op_node_map["Sigmoid:2:0:"])) -> m_output -> display (); cout << endl;
         }
