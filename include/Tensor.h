@@ -15,6 +15,7 @@ class Tensor {
         void scalar_acc_mult (float scalar);// 标量累乘
         Tensor* element_mult (Tensor* tensor);// 逐元素相乘
         float element_square_sum ();// 元素平方和
+        float element_abs_sum ();// 元素绝对值和
         void element_square ();// 逐元素平方
         void add (Tensor* tensor, Tensor* result);// 累加
         Tensor* add (Tensor* tensor);// 普通加法

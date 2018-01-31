@@ -1,4 +1,5 @@
 #include <iostream>
+#include <math.h>
 #include <time.h>
 #include <stdlib.h>
 #include "../include/Tensor.h"
@@ -92,6 +93,14 @@ void Tensor::element_square () {
     for (int i = 0; i < m_size; ++i) {
         m_tensor[i] = m_tensor[i] * m_tensor[i];
     }
+}
+
+float Tensor::element_abs_sum () {
+    float result = 0;
+    for (int i = 0; i < m_size; ++i) {
+        result += fabs (m_tensor[i]);
+    }
+    return result;
 }
 
 float Tensor::element_square_sum () {

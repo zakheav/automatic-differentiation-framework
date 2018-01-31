@@ -17,14 +17,14 @@
 using namespace std;
 
 int main () {
-    vector<int> shape1; shape1.push_back (128); shape1.push_back (32);
-    vector<int> shape2; shape2.push_back (32); shape2.push_back (32);
+    vector<int> shape1; shape1.push_back (2); shape1.push_back (2);
+    vector<int> shape2; shape2.push_back (2); shape2.push_back (2);
     Tensor* t1 = new Tensor (shape1);
     Tensor* t2 = new Tensor (shape2);
     t1 -> init ();
     t2 -> init ();
-    //t1 -> display (); cout << endl;
-    //t2 -> display ();
+    t1 -> display (); cout << endl;
+    t2 -> display ();
 
     // 生成计算节点
     OperatorNode* p1 = new Parameter ("Parameter", "1", "0", t1);
@@ -42,12 +42,12 @@ int main () {
     ComputeGraph cg;
     cg.add_node ("", p1);
     cg.add_node ("", p2);
-    //cg.add_node (p1 -> get_name (), add);
-    //cg.add_node (p2 -> get_name (), add);// 测试加法
+    cg.add_node (p1 -> get_name (), add);
+    cg.add_node (p2 -> get_name (), add);// 测试加法
     //cg.add_node (p1 -> get_name (), minus);
     //cg.add_node (p2 -> get_name (), minus);// 测试减法
-    cg.add_node (p1 -> get_name (), mult);
-    cg.add_node (p2 -> get_name (), mult);// 测试乘法
+    //cg.add_node (p1 -> get_name (), mult);
+    //cg.add_node (p2 -> get_name (), mult);// 测试乘法
     //cg.add_node (p1 -> get_name (), sigmoid);// 测试sigmoid
     //cg.add_node (p1 -> get_name (), square_sum);// 测试SquareSum
     //cg.add_node (p1 -> get_name (), abs_sum);// 测试AbsSum
@@ -68,13 +68,13 @@ int main () {
         cout << "fp result:................." << endl;
         ((OperatorNode*) result[0]) -> m_output -> display (); cout << endl;// 前向结果
         //((OperatorNode*) result[1]) -> m_output -> display ();
-        //cg.back_propagation ();
+        cg.back_propagation ();
         cout << "bp result:................." << endl;
-        //p1 -> m_sum_grad -> display (); cout << endl;
-        //p2 -> m_sum_grad -> display ();// 反向结果
+        p1 -> m_sum_grad -> display (); cout << endl;
+        p2 -> m_sum_grad -> display ();// 反向结果
         cout << "new parameter:............." << endl;
-        //p1 -> m_output -> display (); cout << endl;
-        //p2 -> m_output -> display ();
+        p1 -> m_output -> display (); cout << endl;
+        p2 -> m_output -> display ();
         cg.release_tensor ();
     }
     gettimeofday(&end, 0);  

@@ -4,13 +4,14 @@
 using namespace std;
 int main () {
     vector<int> shape (2);
-    shape[0] = 2; shape[1] = 2;
-    float data[] = {1,2,3,4};
-    float data2[] = {2,3,4,5};
-    Tensor* tensor1 = new Tensor (shape, data);
+    shape[0] = 4; shape[1] = 4;
+    
+    Tensor* tensor1 = new Tensor (shape);
+    tensor1 -> init ();
     tensor1 -> display (); cout << endl;
     
-    Tensor* tensor2 = new Tensor (shape, data2);
+    Tensor* tensor2 = new Tensor (shape);
+    tensor2 -> init ();
     tensor2 -> display (); cout << endl;
 
     Tensor* random_tensor = new Tensor (shape);
@@ -38,6 +39,13 @@ int main () {
     cout << "scalar mult test" << endl;
     scalar_mult_result -> display ();
 
+    tensor1 -> scalar_acc_mult (2.0);// 标量累乘
+    cout << "scalar acc mult test" << endl;
+    tensor1 -> display ();
+
+    tensor1 -> element_square ();
+    cout << "element square test" << endl;
+    tensor1 -> display ();
     
     vector<int> shape1 (3);
     shape1[0] = 2; shape1[1] = 3; shape1[2] = 2;// {{{1,2},{3,4},{5,6}},{{7,8},{9,10},{11,12}}}
@@ -47,5 +55,4 @@ int main () {
     idxs[0] = 1; idxs[1] = 1; idxs[2] = 0;
     cout << "index value test" << endl;
     cout << three_dim_tensor -> get_value (idxs) << endl;
-
 }

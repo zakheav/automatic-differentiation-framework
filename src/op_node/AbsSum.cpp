@@ -7,9 +7,7 @@ void AbsSum::op () {
     Tensor* parent_output = ((OperatorNode*) m_parents[0]) -> m_output;
     vector<int> shape (2); shape[0] = 1; shape[1] = 1;
     m_output = new Tensor (shape);
-    for (int i = 0; i < parent_output -> m_size; ++i) {
-        m_output -> m_tensor[0] += fabs (parent_output -> m_tensor[i]);
-    }
+    m_output -> m_tensor[0] = parent_output -> element_abs_sum ();
 }
 void AbsSum::grad_op () {
     Tensor* parent_output = ((OperatorNode*) m_parents[0]) -> m_output;

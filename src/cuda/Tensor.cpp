@@ -66,16 +66,20 @@ Tensor* Tensor::matrix_mult (Tensor* tensor) {
 
 Tensor* Tensor::scalar_mult (float scalar) {
     Tensor* result = new Tensor (m_shape, 0);
-    for (int i = 0; i < m_size; ++i) {
-        result -> m_tensor[i] = m_tensor[i] * scalar;
-    }
+    // 调用cuda
+    cuda_scalar_tensor_mult (m_tensor, result -> m_tensor, scalar, m_size);
     return result;
 }
 
 void Tensor::scalar_acc_mult (float scalar) {
-    for (int i = 0; i < m_size; ++i) {
-        m_tensor[i] = m_tensor[i] * scalar;
-    }
+    cuda_scalar_tensor_mult (m_tensor, m_tensor, scalar, m_size);
+}
+
+float Tensor::element_abs_sum () {
+    float result = 0;
+    // 调用cuda
+    result = cuda_element_abs_sum (m_tensor, m_size);
+    return result;
 }
 
 float Tensor::element_square_sum () {
@@ -86,9 +90,8 @@ float Tensor::element_square_sum () {
 }
 
 void Tensor::element_square () {
-    for (int i = 0; i < m_size; ++i) {
-        m_tensor[i] = m_tensor[i] * m_tensor[i];
-    }
+    // 调用cuda
+    cuda_element_square (m_tensor, m_size);
 }
 
 Tensor* Tensor::element_mult (Tensor* tensor) {
@@ -106,17 +109,15 @@ Tensor* Tensor::element_mult (Tensor* tensor) {
     }
     if (same_shape == 1) {
         result = new Tensor (tensor -> m_shape, 0);
-        for (int i = 0; i < m_size; ++i) {
-            result -> m_tensor[i] = m_tensor[i] * tensor -> m_tensor[i];
-        }
+        // 调用cuda
+        cuda_element_mult (m_tensor, tensor -> m_tensor, result -> m_tensor, m_size);
     }
     return result;
 }
 
 void Tensor::add (Tensor* tensor, Tensor* result) {
-    for (int i = 0; i < m_size; ++i) {
-        result -> m_tensor[i] = m_tensor[i] + tensor -> m_tensor[i];
-    }
+    // 调用cuda
+    cuda_tensor_add (m_tensor, tensor -> m_tensor, result -> m_tensor, m_size);
 }
 
 Tensor* Tensor::add (Tensor* tensor) {
@@ -135,9 +136,8 @@ Tensor* Tensor::add (Tensor* tensor) {
 
     if (same_shape == 1) {
         result = new Tensor (tensor -> m_shape, 0);
-        for (int i = 0; i < m_size; ++i) {
-            result -> m_tensor[i] = m_tensor[i] + tensor -> m_tensor[i];
-        }
+        // 调用cuda
+        cuda_tensor_add (m_tensor, tensor -> m_tensor, result -> m_tensor, m_size);
     }
     return result;
 }
