@@ -18,6 +18,7 @@ __global__ void matrix_mult (float* A, float* B, float* C, int a_row, int a_col,
     
     int sbmtx_begin = 0;
     float c = 0.0;
+    float compensation = 0.0;
     for (sbmtx_begin = 0; sbmtx_begin < a_col; sbmtx_begin += BLOCK_SIZE) {// 遍历每一对A，B矩阵c_row_id，c_col_id所在行列的子区间
         // 当前线程加载A，B矩阵中对应子矩阵的指定元素，保证当前block中的线程同时加载完一对A，B子矩阵
         A_sub[thread_id_row * BLOCK_SIZE + thread_id_col] = (c_row_id < a_row && sbmtx_begin + thread_id_col < a_col) ? A[c_row_id * a_col + sbmtx_begin + thread_id_col] : 0;
@@ -27,7 +28,12 @@ __global__ void matrix_mult (float* A, float* B, float* C, int a_row, int a_col,
         // 计算A矩阵c_row_id行和B矩阵c_col_id列一个区间的内积，并将每个区间结果累计
         #pragma unroll
         for (int i = 0; i < BLOCK_SIZE; ++i) {
-            c += A_sub[thread_id_row * BLOCK_SIZE + i] * B_sub[i * BLOCK_SIZE + thread_id_col];
+            // c += A_sub[thread_id_row * BLOCK_SIZE + i] * B_sub[i * BLOCK_SIZE + thread_id_col];
+            // Kahan's Summation Formula
+            float y = A_sub[thread_id_row * BLOCK_SIZE + i] * B_sub[i * BLOCK_SIZE + thread_id_col] - compensation;
+            float t = c + y;// 发生舍入
+            compensation = (t - c) - y;// 记录下舍入误差
+            c = t;
         }
         __syncthreads ();
     }

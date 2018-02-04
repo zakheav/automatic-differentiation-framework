@@ -10,6 +10,6 @@ class ComputeGraph: public Graph {
         void forward_propagation (std::vector<Node*> &result_list);
         void back_propagation ();
         void release_tensor ();
-        ~ComputeGraph ();
+        ~ComputeGraph ();// 并不释放其中包含的计算节点的内存空间，用于支持动态计算图
 };
 #endif

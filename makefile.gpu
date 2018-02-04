@@ -21,17 +21,11 @@ obj/xor_test.o: unit_test/xor_test.cpp
 	g++ -std=c++11 -c unit_test/xor_test.cpp -o obj/xor_test.o
 obj/operatorNode_test.o: unit_test/operatorNode_test.cpp
 	g++ -std=c++11 -c unit_test/operatorNode_test.cpp -o obj/operatorNode_test.o
-obj/virtualGraph_test.o: unit_test/virtualGraph_test.cpp
-	g++ -std=c++11 -c unit_test/virtualGraph_test.cpp -o obj/virtualGraph_test.o
 obj/graph_test.o: unit_test/graph_test.cpp
 	g++ -std=c++11 -c unit_test/graph_test.cpp -o obj/graph_test.o
 obj/tensor_test.o: unit_test/tensor_test.cpp
 	g++ -std=c++11 -c unit_test/tensor_test.cpp -o obj/tensor_test.o
 
-obj/MyLoop.o: unit_test/MyLoop.cpp
-	g++ -std=c++11 -c unit_test/MyLoop.cpp -o obj/MyLoop.o
-obj/MyBranch.o: unit_test/MyBranch.cpp
-	g++ -std=c++11 -c unit_test/MyBranch.cpp -o obj/MyBranch.o
 obj/RnnLoop.o: unit_test/rnn/RnnLoop.cpp
 	g++ -std=c++11 -c unit_test/rnn/RnnLoop.cpp -o obj/RnnLoop.o
 obj/RnnBranch.o: unit_test/rnn/RnnBranch.cpp

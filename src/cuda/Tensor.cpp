@@ -1,6 +1,7 @@
 #include <iostream>
 #include <time.h>
 #include <stdlib.h>
+#include <math.h>
 #include "../../include/Tensor.h"
 #include "../../include/cuda/cuda_lib.h"
 using namespace std;

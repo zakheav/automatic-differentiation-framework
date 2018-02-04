@@ -4,7 +4,7 @@
 using namespace std;
 int main () {
     vector<int> shape (2);
-    shape[0] = 4; shape[1] = 4;
+    shape[0] = 32; shape[1] = 32;
     
     Tensor* tensor1 = new Tensor (shape);
     tensor1 -> init ();
@@ -22,7 +22,7 @@ int main () {
     Tensor* mult_result = tensor1 -> matrix_mult (tensor2);// 验证乘法
     cout << "matrix mult test" << endl;
     mult_result -> display ();
-      
+    /*  
     Tensor* add_result = tensor1 -> add (tensor2);// 加法验证
     cout << "add test 1" << endl;
     add_result -> display ();
@@ -55,4 +55,5 @@ int main () {
     idxs[0] = 1; idxs[1] = 1; idxs[2] = 0;
     cout << "index value test" << endl;
     cout << three_dim_tensor -> get_value (idxs) << endl;
+    */
 }

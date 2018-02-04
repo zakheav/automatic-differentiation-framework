@@ -62,10 +62,16 @@ Tensor* Tensor::matrix_mult (Tensor* tensor) {
         for (int i = 0; i < m_shape[0]; ++i) {
             for (int j = 0; j < tensor -> m_shape[1]; ++j) {
                 float r = 0;
+                float compensation = 0.0;
                 for (int k = 0; k < m_shape[1]; ++k) {
                     idx0 = i * m_shape[1] + k;
                     idx1 = k * tensor -> m_shape[1] + j;
-                    r += m_tensor[idx0] * tensor -> m_tensor[idx1];
+                    // Kahan's Summation Formula
+                    // r += m_tensor[idx0] * tensor -> m_tensor[idx1];
+                    float y = m_tensor[idx0] * tensor -> m_tensor[idx1] - compensation;// 补偿
+                    float t = r + y;// 发生舍入
+                    compensation = (t - r) - y;// 记录下舍入误差
+                    r = t;
                 }
                 idx2 = i * tensor -> m_shape[1] + j;
                 result -> m_tensor[idx2] = r;
