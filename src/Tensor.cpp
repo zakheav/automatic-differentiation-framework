@@ -103,16 +103,28 @@ void Tensor::element_square () {
 
 float Tensor::element_abs_sum () {
     float result = 0;
+    float compensation = 0.0;
     for (int i = 0; i < m_size; ++i) {
-        result += fabs (m_tensor[i]);
+        // result += fabs (m_tensor[i]);
+        // Kahan's Summation Formula
+        float y = fabs (m_tensor[i]) - compensation;// 补偿
+        float t = result + y;// 发生舍入
+        compensation = (t - result) - y;// 记录本次的舍入误差
+        result = t;
     }
     return result;
 }
 
 float Tensor::element_square_sum () {
     float result = 0;
+    float compensation = 0.0;
     for (int i = 0; i < m_size; ++i) {
-        result += m_tensor[i] * m_tensor[i];
+        // result += m_tensor[i] * m_tensor[i];
+        // Kahan's Summation Formula
+        float y = m_tensor[i] * m_tensor[i] - compensation;
+        float t = result + y;
+        compensation = (t - result) - y;
+        result = t;
     }
     return result;
 }
