@@ -199,5 +199,5 @@ void Tensor::display () {
 }
 
 Tensor::~Tensor () {
-    delete m_tensor;
+    delete[] m_tensor;
 }
