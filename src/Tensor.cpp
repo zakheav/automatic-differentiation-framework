@@ -3,6 +3,8 @@
 #include <time.h>
 #include <stdlib.h>
 #include "../include/Tensor.h"
+#include "../include/multi_thread/matrix_task.h"
+#include "../include/multi_thread/thread_pool.h"
 using namespace std;
 
 Tensor::Tensor (vector<int> shape, int need_init) {
@@ -59,9 +61,10 @@ Tensor* Tensor::matrix_mult (Tensor* tensor) {
         result_shape[1] = tensor -> m_shape[1];
         result = new Tensor (result_shape, 0);
         int idx0 = 0, idx1 = 0, idx2 = 0;
+        vector<task*> task_list;
         for (int i = 0; i < m_shape[0]; ++i) {
             for (int j = 0; j < tensor -> m_shape[1]; ++j) {
-                float r = 0;
+                /*float r = 0;
                 float compensation = 0.0;
                 for (int k = 0; k < m_shape[1]; ++k) {
                     idx0 = i * m_shape[1] + k;
@@ -74,25 +77,39 @@ Tensor* Tensor::matrix_mult (Tensor* tensor) {
                     r = t;
                 }
                 idx2 = i * tensor -> m_shape[1] + j;
-                result -> m_tensor[idx2] = r;
+                result -> m_tensor[idx2] = r;*/
+                task_list.push_back (new matrix_mult_task (this, tensor, result, i, j));
             }
         }
+        (thread_pool::get_instance ()) -> add_job_list (task_list);
     }
     return result;
 }
 
 Tensor* Tensor::scalar_mult (float scalar) {
     Tensor* result = new Tensor (m_shape, 0);
-    for (int i = 0; i < m_size; ++i) {
+    /*for (int i = 0; i < m_size; ++i) {
         result -> m_tensor[i] = m_tensor[i] * scalar;
+    }*/
+    vector<task*> task_list;
+    int thread_num = (thread_pool::get_instance ()) -> m_worker_num;
+    for (int i = 0; i < thread_num; ++i) {
+        task_list.push_back (new matrix_scalar_mult_task (this, scalar, result, i, thread_num));
     }
+    (thread_pool::get_instance ()) -> add_job_list (task_list);
     return result;
 }
 
 void Tensor::scalar_acc_mult (float scalar) {
-    for (int i = 0; i < m_size; ++i) {
+    /*for (int i = 0; i < m_size; ++i) {
         m_tensor[i] = m_tensor[i] * scalar;
+    }*/
+    vector<task*> task_list;
+    int thread_num = (thread_pool::get_instance ()) -> m_worker_num;
+    for (int i = 0; i < thread_num; ++i) {
+        task_list.push_back (new matrix_scalar_mult_task (this, scalar, this, i, thread_num));
     }
+    (thread_pool::get_instance ()) -> add_job_list (task_list);
 }
 
 void Tensor::element_square () {
@@ -152,9 +169,15 @@ Tensor* Tensor::element_mult (Tensor* tensor) {
 }
 
 void Tensor::add (Tensor* tensor, Tensor* result) {
-    for (int i = 0; i < m_size; ++i) {
+    /*for (int i = 0; i < m_size; ++i) {
         result -> m_tensor[i] = m_tensor[i] + tensor -> m_tensor[i];
+    }*/
+    vector<task*> task_list;
+    int thread_num = (thread_pool::get_instance ()) -> m_worker_num;
+    for (int i = 0; i < thread_num; ++i) {
+        task_list.push_back (new matrix_add_task (this, tensor, result, i, thread_num));
     }
+    (thread_pool::get_instance ()) -> add_job_list (task_list);
 }
 
 Tensor* Tensor::add (Tensor* tensor) {
@@ -173,9 +196,15 @@ Tensor* Tensor::add (Tensor* tensor) {
 
     if (same_shape == 1) {
         result = new Tensor (tensor -> m_shape, 0);
-        for (int i = 0; i < m_size; ++i) {
+        /*for (int i = 0; i < m_size; ++i) {
             result -> m_tensor[i] = m_tensor[i] + tensor -> m_tensor[i];
+        }*/
+        vector<task*> task_list;
+        int thread_num = (thread_pool::get_instance ()) -> m_worker_num;
+        for (int i = 0; i < thread_num; ++i) {
+            task_list.push_back (new matrix_add_task (this, tensor, result, i, thread_num));
         }
+        (thread_pool::get_instance ()) -> add_job_list (task_list);
     }
     return result;
 }

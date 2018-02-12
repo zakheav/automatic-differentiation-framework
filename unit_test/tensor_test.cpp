@@ -4,8 +4,8 @@
 using namespace std;
 int main () {
     vector<int> shape (2);
-    shape[0] = 32; shape[1] = 32;
-    
+    shape[0] = 20; shape[1] = 10;
+
     Tensor* tensor1 = new Tensor (shape);
     tensor1 -> init ();
     tensor1 -> display (); cout << endl;
@@ -17,23 +17,23 @@ int main () {
     Tensor* random_tensor = new Tensor (shape);
     random_tensor -> init ();
     cout << "init test" << endl;
-    random_tensor -> display ();// 初始化验证
+    //random_tensor -> display ();// 初始化验证
 
     Tensor* mult_result = tensor1 -> matrix_mult (tensor2);// 验证乘法
     cout << "matrix mult test" << endl;
-    mult_result -> display ();
-    /*  
+    //mult_result -> display ();
+      
     Tensor* add_result = tensor1 -> add (tensor2);// 加法验证
     cout << "add test 1" << endl;
-    add_result -> display ();
+    //add_result -> display ();
     
     tensor1 -> add (tensor2, add_result);// 加法验证2
     cout << "add test 2" << endl;
-    add_result -> display ();
-
+    //add_result -> display ();
+    
     Tensor* ele_mult_result = tensor1 -> element_mult (tensor2);
     cout << "element mult test" << endl;
-    ele_mult_result -> display ();
+    //ele_mult_result -> display ();
 
     Tensor* scalar_mult_result = tensor1 -> scalar_mult (3.0);// 标量乘法
     cout << "scalar mult test" << endl;
@@ -42,7 +42,7 @@ int main () {
     tensor1 -> scalar_acc_mult (2.0);// 标量累乘
     cout << "scalar acc mult test" << endl;
     tensor1 -> display ();
-
+    /*
     tensor1 -> element_square ();
     cout << "element square test" << endl;
     tensor1 -> display ();
