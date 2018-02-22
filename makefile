@@ -1,10 +1,16 @@
-all: 
+all:
+#编译变量 
+virtual_node_group=obj/VirtualNode.o obj/BranchNode.o obj/LoopNode.o
+operator_node_group=obj/OperatorNode.o obj/Dropout.o obj/Input.o obj/Add.o obj/AbsSum.o obj/Bias.o obj/Mult.o obj/Minus.o obj/SquareSum.o obj/Sigmoid.o obj/Parameter.o
+multi_thread_group=obj/ring_buffer.o obj/matrix_task.o obj/thread_pool.o
+graph_group=obj/Graph.o obj/ComputeGraph.o obj/VirtualGraph.o
+optimizer_group=obj/Optimizer.o obj/Adadelta.o
 
-rnn_test: obj/ring_buffer.o obj/matrix_task.o obj/thread_pool.o obj/rnn_test.o obj/Graph.o obj/VirtualGraph.o obj/Optimizer.o obj/Adadelta.o obj/BranchNode.o obj/LoopNode.o obj/ComputeGraph.o obj/Node.o obj/VirtualNode.o obj/OperatorNode.o obj/Dropout.o obj/Input.o obj/Add.o obj/AbsSum.o obj/Bias.o obj/Mult.o obj/Minus.o obj/SquareSum.o obj/Sigmoid.o obj/Parameter.o obj/Tensor.o
-	g++ -std=c++11 -pthread obj/ring_buffer.o obj/matrix_task.o obj/thread_pool.o obj/rnn_test.o obj/Graph.o obj/VirtualGraph.o obj/Optimizer.o obj/Adadelta.o obj/BranchNode.o obj/LoopNode.o obj/ComputeGraph.o obj/Node.o obj/VirtualNode.o obj/OperatorNode.o obj/Dropout.o obj/Input.o obj/Add.o obj/AbsSum.o obj/Bias.o obj/Mult.o obj/Minus.o obj/SquareSum.o obj/Sigmoid.o obj/Parameter.o obj/Tensor.o -o rnn_test
+rnn_test: $(multi_thread_group) $(operator_node_group) $(graph_group) $(virtual_node_group) $(optimizer_group) obj/rnn_test.o obj/Node.o obj/Tensor.o
+	g++ -std=c++11 -pthread $(multi_thread_group) $(operator_node_group) $(graph_group) $(virtual_node_group) $(optimizer_group) obj/rnn_test.o obj/Node.o obj/Tensor.o -o rnn_test
 
-xor_test: obj/ring_buffer.o obj/matrix_task.o obj/thread_pool.o obj/xor_test.o obj/Graph.o obj/VirtualGraph.o obj/ComputeGraph.o obj/Optimizer.o obj/Adadelta.o obj/Node.o obj/VirtualNode.o obj/OperatorNode.o obj/Dropout.o obj/Input.o obj/Add.o obj/Bias.o obj/Mult.o obj/Minus.o obj/SquareSum.o obj/Sigmoid.o obj/AbsSum.o obj/Parameter.o obj/Tensor.o
-	g++ -std=c++11 -pthread obj/ring_buffer.o obj/matrix_task.o obj/thread_pool.o obj/xor_test.o obj/Graph.o obj/VirtualGraph.o obj/ComputeGraph.o obj/Optimizer.o obj/Adadelta.o obj/Node.o obj/VirtualNode.o obj/OperatorNode.o obj/Dropout.o obj/Input.o obj/Add.o obj/Bias.o obj/Mult.o obj/Minus.o obj/SquareSum.o obj/Sigmoid.o obj/AbsSum.o obj/Parameter.o obj/Tensor.o -o xor_test
+xor_test: $(multi_thread_group) $(graph_group) $(optimizer_group) $(operator_node_group) obj/xor_test.o obj/Node.o obj/VirtualNode.o obj/Tensor.o
+	g++ -std=c++11 -pthread $(multi_thread_group) $(graph_group) $(optimizer_group) $(operator_node_group) obj/xor_test.o obj/Node.o obj/VirtualNode.o obj/Tensor.o -o xor_test
 
 graph_test: obj/graph_test.o obj/Graph.o obj/Node.o
 	g++ -std=c++11 obj/graph_test.o obj/Graph.o obj/Node.o -o graph_test
