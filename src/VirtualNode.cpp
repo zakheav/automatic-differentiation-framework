@@ -25,7 +25,7 @@ void VirtualNode::get_parents_op_nodes (int idx, Graph* compute_graph, vector<No
     oss << idx << ":";
     for (int i = 0; i < m_parents.size (); ++i) {
         if (m_parents[i] -> m_name[0] == "Branch") {
-            node_list.push_back (((BranchNode*) m_parents[i]) -> choose_node (idx, compute_graph));
+            node_list.push_back (((BranchNode*) m_parents[i]) -> choose_node (idx, compute_graph, (BranchNode*) m_parents[i]));
         } else if (m_parents[i] -> m_name[0] == "Loop") {
             node_list.push_back (((LoopNode*) m_parents[i]) -> m_end_compute_node);
         } else {

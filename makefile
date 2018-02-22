@@ -1,7 +1,7 @@
 all: 
 
-rnn_test: obj/ring_buffer.o obj/matrix_task.o obj/thread_pool.o obj/rnn_test.o obj/RnnLoop.o obj/RnnBranch.o obj/Graph.o obj/VirtualGraph.o obj/Optimizer.o obj/Adadelta.o obj/BranchNode.o obj/LoopNode.o obj/ComputeGraph.o obj/Node.o obj/VirtualNode.o obj/OperatorNode.o obj/Dropout.o obj/Input.o obj/Add.o obj/AbsSum.o obj/Bias.o obj/Mult.o obj/Minus.o obj/SquareSum.o obj/Sigmoid.o obj/Parameter.o obj/RnnInputX.o obj/RnnInputY.o obj/Tensor.o
-	g++ -std=c++11 -pthread obj/ring_buffer.o obj/matrix_task.o obj/thread_pool.o obj/rnn_test.o obj/RnnLoop.o obj/RnnBranch.o obj/Graph.o obj/VirtualGraph.o obj/Optimizer.o obj/Adadelta.o obj/BranchNode.o obj/LoopNode.o obj/ComputeGraph.o obj/Node.o obj/VirtualNode.o obj/OperatorNode.o obj/Dropout.o obj/Input.o obj/Add.o obj/AbsSum.o obj/Bias.o obj/Mult.o obj/Minus.o obj/SquareSum.o obj/Sigmoid.o obj/Parameter.o obj/RnnInputX.o obj/RnnInputY.o obj/Tensor.o -o rnn_test
+rnn_test: obj/ring_buffer.o obj/matrix_task.o obj/thread_pool.o obj/rnn_test.o obj/Graph.o obj/VirtualGraph.o obj/Optimizer.o obj/Adadelta.o obj/BranchNode.o obj/LoopNode.o obj/ComputeGraph.o obj/Node.o obj/VirtualNode.o obj/OperatorNode.o obj/Dropout.o obj/Input.o obj/Add.o obj/AbsSum.o obj/Bias.o obj/Mult.o obj/Minus.o obj/SquareSum.o obj/Sigmoid.o obj/Parameter.o obj/RnnInputX.o obj/RnnInputY.o obj/Tensor.o
+	g++ -std=c++11 -pthread obj/ring_buffer.o obj/matrix_task.o obj/thread_pool.o obj/rnn_test.o obj/Graph.o obj/VirtualGraph.o obj/Optimizer.o obj/Adadelta.o obj/BranchNode.o obj/LoopNode.o obj/ComputeGraph.o obj/Node.o obj/VirtualNode.o obj/OperatorNode.o obj/Dropout.o obj/Input.o obj/Add.o obj/AbsSum.o obj/Bias.o obj/Mult.o obj/Minus.o obj/SquareSum.o obj/Sigmoid.o obj/Parameter.o obj/RnnInputX.o obj/RnnInputY.o obj/Tensor.o -o rnn_test
 
 xor_test: obj/ring_buffer.o obj/matrix_task.o obj/thread_pool.o obj/xor_test.o obj/Graph.o obj/VirtualGraph.o obj/ComputeGraph.o obj/Optimizer.o obj/Adadelta.o obj/Node.o obj/VirtualNode.o obj/OperatorNode.o obj/Dropout.o obj/Input.o obj/Add.o obj/Bias.o obj/Mult.o obj/Minus.o obj/SquareSum.o obj/Sigmoid.o obj/AbsSum.o obj/Parameter.o obj/RnnInputX.o obj/RnnInputY.o obj/Tensor.o
 	g++ -std=c++11 -pthread obj/ring_buffer.o obj/matrix_task.o obj/thread_pool.o obj/xor_test.o obj/Graph.o obj/VirtualGraph.o obj/ComputeGraph.o obj/Optimizer.o obj/Adadelta.o obj/Node.o obj/VirtualNode.o obj/OperatorNode.o obj/Dropout.o obj/Input.o obj/Add.o obj/Bias.o obj/Mult.o obj/Minus.o obj/SquareSum.o obj/Sigmoid.o obj/AbsSum.o obj/Parameter.o obj/RnnInputX.o obj/RnnInputY.o obj/Tensor.o -o xor_test
@@ -15,8 +15,8 @@ tensor_test: obj/tensor_test.o obj/Tensor.o obj/ring_buffer.o obj/matrix_task.o 
 operatorNode_test: obj/operatorNode_test.o obj/ComputeGraph.o obj/Optimizer.o obj/Graph.o obj/Dropout.o obj/Sigmoid.o obj/AbsSum.o obj/SquareSum.o obj/Add.o obj/Bias.o obj/Mult.o obj/Minus.o obj/Parameter.o obj/OperatorNode.o obj/Node.o obj/Tensor.o
 	g++ -std=c++11 obj/operatorNode_test.o obj/ComputeGraph.o obj/Optimizer.o obj/Graph.o obj/Dropout.o obj/Sigmoid.o obj/AbsSum.o obj/SquareSum.o obj/Add.o obj/Bias.o obj/Mult.o obj/Minus.o obj/Parameter.o obj/OperatorNode.o obj/Node.o obj/Tensor.o -o operatorNode_test
 
-obj/rnn_test.o: unit_test/rnn/rnn_test.cpp
-	g++ -std=c++11 -c unit_test/rnn/rnn_test.cpp -o obj/rnn_test.o
+obj/rnn_test.o: unit_test/rnn_test.cpp
+	g++ -std=c++11 -c unit_test/rnn_test.cpp -o obj/rnn_test.o
 obj/xor_test.o: unit_test/xor_test.cpp
 	g++ -std=c++11 -c unit_test/xor_test.cpp -o obj/xor_test.o
 obj/operatorNode_test.o: unit_test/operatorNode_test.cpp
@@ -25,11 +25,6 @@ obj/graph_test.o: unit_test/graph_test.cpp
 	g++ -std=c++11 -c unit_test/graph_test.cpp -o obj/graph_test.o
 obj/tensor_test.o: unit_test/tensor_test.cpp
 	g++ -std=c++11 -c unit_test/tensor_test.cpp -o obj/tensor_test.o
-
-obj/RnnLoop.o: unit_test/rnn/RnnLoop.cpp
-	g++ -std=c++11 -c unit_test/rnn/RnnLoop.cpp -o obj/RnnLoop.o
-obj/RnnBranch.o: unit_test/rnn/RnnBranch.cpp
-	g++ -std=c++11 -c unit_test/rnn/RnnBranch.cpp -o obj/RnnBranch.o
 
 obj/SquareSum.o: src/op_node/SquareSum.cpp
 	g++ -std=c++11 -c src/op_node/SquareSum.cpp -o obj/SquareSum.o
@@ -90,4 +85,4 @@ obj/matrix_task.o: src/multi_thread/matrix_task.cpp
 	g++ -std=c++11 -c src/multi_thread/matrix_task.cpp -o obj/matrix_task.o
 
 clean:
-	rm obj/*o 
+	rm obj/*o rnn_test xor_test tensor_test operatorNode_test graph_test

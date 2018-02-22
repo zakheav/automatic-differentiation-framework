@@ -1,13 +1,14 @@
-#include "../../include/Tensor.h"
-#include "../../include/op_node/RnnInputX.h"
-#include "../../include/VirtualNode.h"
-#include "../../include/OperatorNode.h"
-#include "../../include/VirtualGraph.h"
-#include "../../include/ComputeGraph.h"
-#include "../../include/Optimizer.h"
-#include "../../include/optimizer/Adadelta.h"
-#include "RnnLoop.h"
-#include "RnnBranch.h"
+#include "../include/Tensor.h"
+#include "../include/op_node/RnnInputX.h"
+#include "../include/op_node/Input.h"
+#include "../include/VirtualNode.h"
+#include "../include/OperatorNode.h"
+#include "../include/VirtualGraph.h"
+#include "../include/ComputeGraph.h"
+#include "../include/Optimizer.h"
+#include "../include/optimizer/Adadelta.h"
+#include "../include/BranchNode.h"
+#include "../include/LoopNode.h"
 #include <vector>
 #include <iostream>
 #include <sstream>
@@ -48,6 +49,37 @@ void prepare_data (int num, vector<Tensor*> &add_nums, vector<Tensor*> &sums) {
         sums.push_back (t_c);
     }
 }
+// rnn中的分支选择函数
+Node* choose_node (int idx, Graph* compute_graph, BranchNode* branch_node) {
+    ostringstream oss;
+    if (idx == 0) {
+        int batch_size = 1;
+        int hidden_size = 8;
+        vector<int> shape (2);
+        shape[0]  = batch_size; shape[1] = hidden_size;
+        Tensor* init_tensor = new Tensor (shape);
+        vector<Tensor*> data; data.push_back (init_tensor);
+        Node* init_input = new Input ("Input", "init", "0", data);
+        compute_graph -> add_node ("", init_input);
+        ((Input*) init_input) -> op ();
+        return init_input;
+    } else {
+        oss << (idx - 1) << ":";
+        string name = "Mult:h:" + oss.str ();
+        return compute_graph -> get_node (name);
+    }
+}
+// rnn中的循环init,condition函数
+void init (LoopNode* loop_node) {
+}
+int condition (Graph* compute_graph, int idx) {
+    if (idx < 8) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
 int main () {
     // 准备数据集
     vector<Tensor*> add_nums;
@@ -88,7 +120,7 @@ int main () {
 
     VirtualNode* multh = new VirtualNode ("Mult", "h");
     VirtualNode* mult1 = new VirtualNode ("Mult", "1");
-    RnnBranch* branch = new RnnBranch ("Branch", "1");
+    BranchNode* branch = new BranchNode ("Branch", "1", &choose_node);
     VirtualNode* add1 = new VirtualNode ("Add", "1");
 
     VirtualNode* b1 = new VirtualNode ("Parameter", "b1", 1);
@@ -114,7 +146,7 @@ int main () {
     VirtualNode* minus = new VirtualNode ("Minus", "1");
     VirtualNode* abs = new VirtualNode ("AbsSum", "1");
 
-    RnnLoop* loop = new RnnLoop ("Loop", "1");
+    LoopNode* loop = new LoopNode ("Loop", "1", &init, &condition);
 
     // 构建虚拟图
     loop -> m_sub_vgraph -> add_node ("", input_x);
