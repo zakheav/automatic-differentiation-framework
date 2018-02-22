@@ -1,5 +1,6 @@
 #ifndef VIRTUALNODE_H_
 #define VIRTUALNODE_H_
+#include "op_node/Input.h"
 #include "Node.h"
 #include "Tensor.h"
 #include "OperatorNode.h"
@@ -9,8 +10,9 @@
 class VirtualNode: public Node {
     public:
         Tensor* m_data;// 记录一些必要的数据，比如虚拟节点是dropout节点时所需要的filter
-        std::vector<Tensor*> m_input_data;
+        std::vector<Tensor*> m_input_data;// 原始输入数据缓存
         std::unordered_map<std::string, Node*> m_op_node_map;// 缓存这个虚拟节点生成计算节点
+        void (*input_op) (Input* input);// Input计算节点的数据输入函数
         int m_share_parameter;
         float m_keep_rate;
         VirtualNode (std::string type, std::string id, int share_parameter = 0, float keep_rate = 0.5);

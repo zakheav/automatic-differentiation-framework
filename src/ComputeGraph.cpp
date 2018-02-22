@@ -1,12 +1,17 @@
 #include "../include/ComputeGraph.h"
 #include "../include/OperatorNode.h"
+#include "../include/op_node/Input.h"
 #include <iostream>
 using namespace std;
 void ComputeGraph::forward_propagation (vector<Node*> &result_list) {
     vector<Node*> topo_result;
     topological_sort (m_adj_table, topo_result);
     for (int i = 0; i < topo_result.size (); ++i) {
-        ((OperatorNode*) topo_result[i]) -> op ();
+        if (topo_result[i] -> m_name[0] == "Input") {
+            ((Input*) topo_result[i]) -> op ((Input*) topo_result[i]);
+        } else {
+            ((OperatorNode*) topo_result[i]) -> op ();
+        }
     }
     get_endnode (result_list);
 }

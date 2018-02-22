@@ -1,5 +1,4 @@
 #include "../include/Tensor.h"
-#include "../include/op_node/RnnInputX.h"
 #include "../include/op_node/Input.h"
 #include "../include/VirtualNode.h"
 #include "../include/OperatorNode.h"
@@ -61,7 +60,7 @@ Node* choose_node (int idx, Graph* compute_graph, BranchNode* branch_node) {
         vector<Tensor*> data; data.push_back (init_tensor);
         Node* init_input = new Input ("Input", "init", "0", data);
         compute_graph -> add_node ("", init_input);
-        ((Input*) init_input) -> op ();
+        ((Input*) init_input) -> op ((Input*) init_input);
         return init_input;
     } else {
         oss << (idx - 1) << ":";
@@ -78,6 +77,33 @@ int condition (Graph* compute_graph, int idx) {
     } else {
         return 1;
     }
+}
+// rnn的输入函数，简单的数据输入预处理
+void rnn_input_x (Input* input) {
+    int batch_size = 1;
+    vector<int> shape (2); shape[0] = batch_size; shape[1] = 2;
+    float* data = new float[2 * batch_size];
+    for (int i = 0; i < batch_size; ++i) {
+        Tensor* a = input -> m_data[input -> m_data_ptr];
+        Tensor* b = input -> m_data[input -> m_data_ptr + 1];
+        int idx = atoi (input -> m_name[2].c_str ());
+        data[i * 2] = a -> m_tensor[idx];
+        data[i * 2 + 1] = b -> m_tensor[idx];
+        input -> m_data_ptr = (input -> m_data_ptr + 2) % input -> m_data.size ();
+    }
+    input -> m_output = new Tensor (shape, data);
+}
+void rnn_input_y (Input* input) {
+    int batch_size = 1;
+    float* data = new float[1 * batch_size];
+    vector<int> shape (2); shape[0] = batch_size; shape[1] = 1;
+    for (int i = 0; i < batch_size; ++i) {
+        Tensor* a = input -> m_data[input -> m_data_ptr];
+        int idx = atoi (input -> m_name[2].c_str ());
+        data[i] = a -> m_tensor[idx];
+        input -> m_data_ptr = (input -> m_data_ptr + 1) % input -> m_data.size ();
+    }
+    input -> m_output = new Tensor (shape, data);
 }
 
 int main () {
@@ -109,8 +135,9 @@ int main () {
     t_b2 -> init ();
 
     // 准备虚拟节点
-    VirtualNode* input_x = new VirtualNode ("RnnInputX", "1");
+    VirtualNode* input_x = new VirtualNode ("Input", "1");
     input_x -> m_input_data = add_nums;
+    input_x -> input_op = &rnn_input_x;
 
     VirtualNode* wh = new VirtualNode ("Parameter", "wh", 1);
     wh -> m_data = t_wh;
@@ -140,8 +167,9 @@ int main () {
     VirtualNode* bias2 = new VirtualNode ("Bias", "2");
     VirtualNode* sigmoid2 = new VirtualNode ("Sigmoid", "2");
 
-    VirtualNode* input_y = new VirtualNode ("RnnInputY", "1");
+    VirtualNode* input_y = new VirtualNode ("Input", "2");
     input_y -> m_input_data = sums;
+    input_y -> input_op = &rnn_input_y;
     
     VirtualNode* minus = new VirtualNode ("Minus", "1");
     VirtualNode* abs = new VirtualNode ("AbsSum", "1");
@@ -179,11 +207,10 @@ int main () {
     
     VirtualGraph* vg = new VirtualGraph ();
     vg -> add_node ("", loop);
-
     // 构建计算图
     ComputeGraph* train_cg = new ComputeGraph ();
     vg -> build_compute_graph (train_cg);
-    Optimizer* optimizer = new Adadelta (0.1);
+    Optimizer* optimizer = new Adadelta (0.2);
     train_cg -> m_optimizer = optimizer;
     // 构建转置图
     train_cg -> build_reverse_graph ();
@@ -199,9 +226,9 @@ int main () {
     for (int i = 0; i < 20000; ++i) {
         vector<Node*> error;
         if (i % 1000 == 0) {
-            int ptr = ((RnnInputX*) (train_cg -> get_node ("RnnInputX:1:0:"))) -> m_data_ptr;
-            cout << tensor_to_int (((RnnInputX*) (train_cg -> get_node ("RnnInputX:1:0:"))) -> m_data[ptr]) << "+"
-            << tensor_to_int (((RnnInputX*) (train_cg -> get_node ("RnnInputX:1:0:"))) -> m_data[ptr + 1]);
+            int ptr = ((Input*) (train_cg -> get_node ("Input:1:0:"))) -> m_data_ptr;
+            cout << tensor_to_int (((Input*) (train_cg -> get_node ("Input:1:0:"))) -> m_data[ptr]) << "+"
+            << tensor_to_int (((Input*) (train_cg -> get_node ("Input:1:0:"))) -> m_data[ptr + 1]);
         }
         train_cg -> forward_propagation (error);
         train_cg -> back_propagation ();

@@ -2,6 +2,7 @@
 #include "../include/VirtualNode.h"
 #include "../include/LoopNode.h"
 #include "../include/OperatorNode.h"
+#include "../include/op_node/Input.h"
 #include <unordered_map>
 #include <iostream>
 using namespace std;
@@ -22,7 +23,11 @@ Node* VirtualGraph::build_compute_graph (Graph* compute_graph, int idx) {// 输�
             if (v_node -> m_parents.size () == 0) {// 该虚拟节点没有依赖的虚拟节点
                 Node* op_node = v_node -> get_op_node (idx);
                 compute_graph -> add_node ("", op_node);// 向计算图中添加节点
-                ((OperatorNode*) op_node) -> op ();// 执行该计算节点
+                if (op_node -> m_name[0] == "Input") {
+                    ((Input*) op_node) -> op ((Input*) op_node);// 执行该计算节点
+                } else {
+                    ((OperatorNode*) op_node) -> op ();// 执行该计算节点
+                }
                 end_node = op_node;
             } else {
                 vector<Node*> parents_op_node;

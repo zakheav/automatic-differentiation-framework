@@ -10,8 +10,6 @@
 #include "../include/op_node/AbsSum.h"
 #include "../include/op_node/Sigmoid.h"
 #include "../include/op_node/Parameter.h"
-#include "../include/op_node/RnnInputX.h"
-#include "../include/op_node/RnnInputY.h"
 #include "../include/op_node/Dropout.h"
 #include <sstream>
 #include <iostream>
@@ -19,6 +17,7 @@ using namespace std;
 VirtualNode::VirtualNode (string type, string id, int share_parameter, float keep_rate): Node (type, id) {
     m_share_parameter = share_parameter;
     m_keep_rate = keep_rate;
+    input_op = 0;
 }
 void VirtualNode::get_parents_op_nodes (int idx, Graph* compute_graph, vector<Node*> &node_list) {
     ostringstream oss;
@@ -34,6 +33,7 @@ void VirtualNode::get_parents_op_nodes (int idx, Graph* compute_graph, vector<No
         }
     }
 }
+
 Node* VirtualNode::get_op_node (int idx) {// 一个OperatorNode工厂
     ostringstream oss;
     oss << idx;
@@ -46,7 +46,7 @@ Node* VirtualNode::get_op_node (int idx) {// 一个OperatorNode工厂
             if (m_input_data.size () == 0) {
                 cout << "input data is not initialize" << endl;
             } else {
-                op_node = new Input (m_name[0], m_name[1], oss.str (), m_input_data);
+                op_node = new Input (m_name[0], m_name[1], oss.str (), m_input_data, input_op);
             }
         } else if (m_name[0] == "Parameter") {
             if (m_data == 0) {
@@ -66,18 +66,6 @@ Node* VirtualNode::get_op_node (int idx) {// 一个OperatorNode工厂
             op_node = new Sigmoid (m_name[0], m_name[1], oss.str ());
         } else if (m_name[0] == "Bias") {
             op_node =  new Bias (m_name[0], m_name[1], oss.str ());
-        } else if (m_name[0] == "RnnInputX") {
-            if (m_input_data.size () == 0) {
-                cout << "input data is not initialize" << endl;
-            } else {
-                op_node = new RnnInputX (m_name[0], m_name[1], oss.str (), m_input_data);
-            }
-        } else if (m_name[0] == "RnnInputY") {
-            if (m_input_data.size () == 0) {
-                cout << "input data is not initialize" << endl;
-            } else {
-                op_node = new RnnInputY (m_name[0], m_name[1], oss.str (), m_input_data);
-            }
         } else if (m_name[0] == "Dropout") {
             if (m_data == 0) {
                 cout << "dropout filter shape is not set" << endl;
