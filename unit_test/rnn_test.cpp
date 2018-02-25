@@ -212,9 +212,7 @@ int main () {
     vg -> build_compute_graph (train_cg);
     Optimizer* optimizer = new Adadelta (0.2);
     train_cg -> m_optimizer = optimizer;
-    // 构建转置图
-    train_cg -> build_reverse_graph ();
-    // 构建子图
+    // 对计算图进行修剪
     vector<Node*> endnode_list;
     unordered_map<string, Node*>::iterator op_node_map_it = abs -> m_op_node_map.begin ();
     while (op_node_map_it != abs -> m_op_node_map.end ()) {
@@ -244,7 +242,6 @@ int main () {
             Tensor r_tensor = Tensor (r_shape, r);
             cout << " guess = :" << tensor_to_int (&r_tensor) << endl;
         }
-        train_cg -> release_tensor ();// 释放本次迭代的中间结果张量
     }
 
     delete train_cg;

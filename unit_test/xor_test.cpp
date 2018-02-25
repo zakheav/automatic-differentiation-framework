@@ -106,8 +106,6 @@ int main () {
     // 初始化优化器，Adadelta
     Optimizer* optimizer = new Adadelta (0.2);
     train_cg -> m_optimizer = optimizer;
-    // 构建转置图，用于反向传播
-    train_cg -> build_reverse_graph ();
     // 训练
     for (int i = 0; i < 10000; ++i) {
         if (i < 9900 == 0) {
@@ -122,7 +120,6 @@ int main () {
             cout << "xor: ";
             ((OperatorNode*) (sig2 -> m_op_node_map["Sigmoid:2:0:"])) -> m_output -> display (); cout << endl;
         }
-        train_cg -> release_tensor ();// 释放本次迭代的中间结果张量
     }
 
     delete train_cg;
