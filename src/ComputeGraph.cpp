@@ -20,9 +20,10 @@ void ComputeGraph::forward_propagation (vector<Node*> &result_list) {
         }
     }
     get_endnode (result_list);
+    m_need_release_tensor_flag = 1;
 }
 void ComputeGraph::back_propagation () {
-    if (m_need_build_reverse_graph_flag == 0) {
+    if (m_need_build_reverse_graph_flag == 1) {
         build_reverse_graph ();
     }
     vector<Node*> topo_result;
@@ -40,6 +41,7 @@ void ComputeGraph::release_tensor () {
         ((OperatorNode*) (node_map_it -> second)) -> release_tensor ();
         ++node_map_it;
     }
+    m_need_release_tensor_flag = 0;
 }
 ComputeGraph::~ComputeGraph () {
     cout << "compute graph free" << endl;

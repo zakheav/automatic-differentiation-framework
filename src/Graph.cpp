@@ -2,7 +2,7 @@
 #include "../include/Graph.h"
 using namespace std;
 Graph::Graph () {
-    m_need_build_reverse_graph_flag = 0;
+    m_need_build_reverse_graph_flag = 1;
 }
 void Graph::add_node (string parent_name, Node* node) {
     m_node_map[node -> get_name ()] = node;// 将节点加入字典
@@ -96,10 +96,10 @@ void Graph::build_reverse_graph () {
         }
         ++adj_table_it;
     }
-    m_need_build_reverse_graph_flag = 1;
+    m_need_build_reverse_graph_flag = 0;
 }
 void Graph::get_endnode (vector<Node*> &endnode_list) {
-    if (m_need_build_reverse_graph_flag == 0) {// 没有构建转置图
+    if (m_need_build_reverse_graph_flag == 1) {// 没有构建转置图
         build_reverse_graph ();
     }
     unordered_map<string, vector<Node*> >::iterator reverse_table_it = m_reverse_table.begin ();
