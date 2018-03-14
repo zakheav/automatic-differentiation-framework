@@ -14,13 +14,16 @@ void matrix_mult_task::run () {
     float c = 0;
     float compensation = 0.0;
     int idx0 = 0, idx1 = 0, idx2 = 0;
+    idx0 = m_a_idx * m_A -> m_shape[1];
+    idx1 = m_b_idx;
+    int offset = m_B -> m_shape[1];
     for (int i = 0; i < a_col; ++i) {
-        idx0 = m_a_idx * m_A -> m_shape[1] + i;
-        idx1 = i * m_B -> m_shape[1] + m_b_idx;
         float y = m_A -> m_tensor[idx0] * m_B -> m_tensor[idx1] - compensation;// 补偿
         float t = c + y;// 发生舍入
         compensation = (t - c) - y;// 记录下舍入误差
         c = t;
+        idx0 += 1;
+        idx1 += offset;
     }
     idx2 = m_a_idx * m_C -> m_shape[1] + m_b_idx;
     m_C -> m_tensor[idx2] = c;
